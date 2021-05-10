@@ -182,35 +182,33 @@ def get_alt_vertex(side_name, triangle):
         return triangle[0]
     else:
         return triangle[1]
+
+# def find_central_point
         
 
-# def draw_all_stuff(desired_triangle, altitude_end)
-#     ############  1st  point draw
-#     canvas.create_oval(desired_triangle[0][0] - 1, canvas_height - desired_triangle[0][1] - 1,
-#         desired_triangle[0][0] + 1, canvas_height - desired_triangle[0][1] + 1, width=2)
-#     ############  2nd
-#     canvas.create_oval(desired_triangle[1][0] - 1, canvas_height - desired_triangle[1][1] - 1,
-#         desired_triangle[1][0] + 1, canvas_height - desired_triangle[1][1] + 1, width=2)
-#     ############  3rd
-#     canvas.create_oval(desired_triangle[2][0] - 1, canvas_height - desired_triangle[2][1] - 1,
-#         desired_triangle[2][0] + 1, canvas_height - desired_triangle[2][1] + 1, width=2)
-#     ############
+def draw_all_stuff(canvas, desired_triangle, desired_vertex, dash_vertex, max_x, max_y, kx, ky):
+    ### triangle draw
+    canvas.create_polygon(desired_triangle[0][0], canvas_height - desired_triangle[0][1],
+                          desired_triangle[1][0], canvas_height - desired_triangle[1][1],
+                          desired_triangle[2][0], canvas_height - desired_triangle[2][1],
+                          fill='white', outline='black')
 
-#     ### triangle draw
-#     canvas.create_polygon(desired_triangle[0][0], canvas_height - desired_triangle[0][1],
-#                           desired_triangle[1][0], canvas_height - desired_triangle[1][1],
-#                           desired_triangle[2][0], canvas_height - desired_triangle[2][1],
-#                           fill='white', outline='black')
+    ############  draw points
+    for vertex in desired_triangle:
+        canvas.create_oval(vertex[0] - 1, canvas_height - vertex[1] - 1,
+            vertex[0] + 1, canvas_height - vertex[1] + 1, width=2)
+        canvas.create_text(vertex[0] - 15, canvas_height - vertex[1] - 15,
+            text = "({};{})".format(vertex[0], vertex[1]))
 
-#     ### altitude draw
-#     desired_vertex = get_vertex(alt_side, desired_triangle, max_x, max_y)
-#     canvas.create_line(desired_vertex[0], canvas_height - desired_vertex[1],
-#                          max_x, canvas_height - max_y, activefill='red')
-#     dash_vertex = get_alt_vertex(alt_side, desired_triangle)
-#     canvas.create_line(dash_vertex[0], canvas_height - dash_vertex[1],
-#                          max_x, canvas_height - max_y, dash=(5, 1))
-#     canvas.create_oval(max_x - 1, canvas_height - max_y - 1,
-#         max_x + 1, canvas_height - max_y + 1, width=2)
+    ### altitude draw
+    canvas.create_line(desired_vertex[0], canvas_height - desired_vertex[1],
+                         max_x, canvas_height - max_y, activefill='red')
+    canvas.create_line(dash_vertex[0], canvas_height - dash_vertex[1],
+                         max_x, canvas_height - max_y, dash=(5, 1))
+    canvas.create_oval(max_x - 1, canvas_height - max_y - 1,
+        max_x + 1, canvas_height - max_y + 1, width=2)
+    canvas.create_text(max_x - 15, canvas_height - max_y - 15,
+            text = "({};{})".format(max_x, max_y))
 
 
 def solve_task(canvas, listb_set):
@@ -223,7 +221,6 @@ def solve_task(canvas, listb_set):
     triangles = []
     form_triangles_list(triangles, coord_set)
 
-    print("triangles before check: ", triangles)                                                                # debug info
     if len(triangles) < 1:
         showerror("Ошибка", "Для решения задачи нужно задать хотя бы один треугольник.")
         return
@@ -234,10 +231,7 @@ def solve_task(canvas, listb_set):
     max_y = 0
     alt_side = ''
 
-    print("triangles[0]=", triangles[0])                                                                        # debug info
     for triangle in triangles:
-        print("triangle = ", triangle)                                                                          # debug info
-        print("triangle[0]=", triangle[0], "    ;triangle[1]=", triangle[1], "   ;triangle[2]=", triangle[2])   # debug info
         cur_h, cur_x, cur_y, cur_side = get_h_of_triangle(triangle[0], triangle[1], triangle[2])
         if cur_h > max_h:
             desired_triangle = deepcopy(triangle)
@@ -245,6 +239,9 @@ def solve_task(canvas, listb_set):
             max_h = cur_h
             max_x = cur_x
             max_y = cur_y
+        
+    desired_vertex = get_vertex(alt_side, desired_triangle)
+    dash_vertex = get_alt_vertex(alt_side, desired_triangle)
 
 
     showinfo(
@@ -254,32 +251,9 @@ def solve_task(canvas, listb_set):
 
     canvas.delete("all")
 
-    ############  1st  point draw
-    canvas.create_oval(desired_triangle[0][0] - 1, canvas_height - desired_triangle[0][1] - 1,
-        desired_triangle[0][0] + 1, canvas_height - desired_triangle[0][1] + 1, width=2)
-    ############  2nd
-    canvas.create_oval(desired_triangle[1][0] - 1, canvas_height - desired_triangle[1][1] - 1,
-        desired_triangle[1][0] + 1, canvas_height - desired_triangle[1][1] + 1, width=2)
-    ############  3rd
-    canvas.create_oval(desired_triangle[2][0] - 1, canvas_height - desired_triangle[2][1] - 1,
-        desired_triangle[2][0] + 1, canvas_height - desired_triangle[2][1] + 1, width=2)
-    ############
-
-    ### triangle draw
-    canvas.create_polygon(desired_triangle[0][0], canvas_height - desired_triangle[0][1],
-                          desired_triangle[1][0], canvas_height - desired_triangle[1][1],
-                          desired_triangle[2][0], canvas_height - desired_triangle[2][1],
-                          fill='white', outline='black')
-
-    ### altitude draw
-    desired_vertex = get_vertex(alt_side, desired_triangle)
-    canvas.create_line(desired_vertex[0], canvas_height - desired_vertex[1],
-                         max_x, canvas_height - max_y, activefill='red')
-    dash_vertex = get_alt_vertex(alt_side, desired_triangle)
-    canvas.create_line(dash_vertex[0], canvas_height - dash_vertex[1],
-                         max_x, canvas_height - max_y, dash=(5, 1))
-    canvas.create_oval(max_x - 1, canvas_height - max_y - 1,
-        max_x + 1, canvas_height - max_y + 1, width=2)
+    kx = 0
+    ky = 0
+    draw_all_stuff(canvas, desired_triangle, desired_vertex, dash_vertex, max_x, max_y, kx, ky)
     
 
     '''zoom_vars = get_zoom_vars(magic_circles)
