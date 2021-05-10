@@ -19,20 +19,6 @@ def form_coord_matrix(set_points):
         set_points[i][1] = float(set_points[i][1])
 
 
-def draw_coords(canvas, magic_circles, circles):
-    coord_size = 12
-    indent = 5
-
-    for i in range(len(magic_circles) - 1):
-        for j in range(len(magic_circles[i])):
-            canvas.create_text(
-                magic_circles[i][j][0],
-                magic_circles[i][j][1] + indent,
-                text="({:.1f},{:.1f})".format(circles[i][j][0], circles[i][j][1]),
-                font=("Times new roman", coord_size),
-            )
-
-
 
 def form_triangles_list(triangles, set_points):
     for i in range(len(set_points)):
@@ -66,14 +52,6 @@ def triangle_to_plot(triangles):
 
 def section_len(sx, sy, ex, ey):
     return sqrt((sx - ex)**2 + (sy - ey)**2)
-
-
-
-def form_canvas_coords(circles):
-    for i in range(len(circles) - 1):
-        for j in range(len(circles[i])):
-            circles[i][j][1] *= -1
-            circles[i][j][1] += canvas_width
 
 
 def get_zoom_vars(circles):
@@ -183,31 +161,60 @@ def get_alt_vertex(side_name, triangle):
     else:
         return triangle[1]
 
-# def find_central_point
+def find_odds_for_drawing(desired_triangle, max_x, max_y):
+    x_min = min(desired_triangle[0][0], desired_triangle[1][0], desired_triangle[2][0], max_x)
+    x_max = max(desired_triangle[0][0], desired_triangle[1][0], desired_triangle[2][0], max_x)
+
+    y_min = min(desired_triangle[0][1], desired_triangle[1][1], desired_triangle[2][1], max_y)
+    y_max = max(desired_triangle[0][1], desired_triangle[1][1], desired_triangle[2][1], max_y)
+
+    k_x = (canvas_width * 0.9) / (x_max - x_min) if x_max != x_min else 0
+    k_y = (canvas_height * 0.9) / (y_max - y_min) if y_max != y_min else 0
+
+    # x_indent = 0.05 * canvas_width
+    # y_indent = 0.05 * canvas_height
+
+    if k_x == 0 and k_y == 0:
+        x_indent = 0.5 * canvas_width
+        y_indent = 0.5 * canvas_height
+    elif k_x == 0 and k_y != 0:
+        x_indent = 0.5 * canvas_width
+        y_indent = 0.05* canvas_height
+    elif k_x != 0 and k_y == 0:
+        x_indent = 0.05 * canvas_width
+        y_indent = 0.5 * canvas_height
+    elif k_x != 0 and k_y != 0:
+        x_indent = 0.05 * canvas_width
+        y_indent = 0.05 * canvas_height
+        k_x = min(k_x, k_y)
+        k_y = k_x
+
+    return k_x, k_y, x_min, y_min, x_indent, y_indent
         
 
-def draw_all_stuff(canvas, desired_triangle, desired_vertex, dash_vertex, max_x, max_y, kx, ky):
+def draw_all_stuff(canvas, desired_triangle, desired_vertex, dash_vertex, max_x, max_y, kx, ky, x_indent, y_indent):
     ### triangle draw
-    canvas.create_polygon(desired_triangle[0][0], canvas_height - desired_triangle[0][1],
-                          desired_triangle[1][0], canvas_height - desired_triangle[1][1],
-                          desired_triangle[2][0], canvas_height - desired_triangle[2][1],
+    print(canvas_height-(desired_triangle[0][1]*ky) + y_indent)                   # debug info
+    canvas.create_polygon(desired_triangle[0][0] * kx + x_indent, canvas_height - desired_triangle[0][1]*ky - y_indent,
+                          desired_triangle[1][0] * kx + x_indent, canvas_height - desired_triangle[1][1]*ky - y_indent,
+                          desired_triangle[2][0] * kx + x_indent, canvas_height - desired_triangle[2][1]*ky - y_indent,
                           fill='white', outline='black')
 
     ############  draw points
     for vertex in desired_triangle:
-        canvas.create_oval(vertex[0] - 1, canvas_height - vertex[1] - 1,
-            vertex[0] + 1, canvas_height - vertex[1] + 1, width=2)
-        canvas.create_text(vertex[0] - 15, canvas_height - vertex[1] - 15,
+        canvas.create_oval(vertex[0]*kx+x_indent - 1, canvas_height - vertex[1]*ky-y_indent - 1,
+            vertex[0]*kx+x_indent + 1, canvas_height - vertex[1]*ky-y_indent + 1, width=2)
+        canvas.create_text(vertex[0]*kx+x_indent - 15, canvas_height - vertex[1]*ky-y_indent - 15,
             text = "({};{})".format(vertex[0], vertex[1]))
 
     ### altitude draw
-    canvas.create_line(desired_vertex[0], canvas_height - desired_vertex[1],
-                         max_x, canvas_height - max_y, activefill='red')
-    canvas.create_line(dash_vertex[0], canvas_height - dash_vertex[1],
-                         max_x, canvas_height - max_y, dash=(5, 1))
-    canvas.create_oval(max_x - 1, canvas_height - max_y - 1,
-        max_x + 1, canvas_height - max_y + 1, width=2)
-    canvas.create_text(max_x - 15, canvas_height - max_y - 15,
+    canvas.create_line(desired_vertex[0]*kx+x_indent, canvas_height - desired_vertex[1]*ky-y_indent,
+                         max_x*kx+x_indent, canvas_height - max_y*ky-y_indent, activefill='red')
+    canvas.create_line(dash_vertex[0]*kx+x_indent, canvas_height - dash_vertex[1]*ky-y_indent,
+                         max_x*kx+x_indent, canvas_height - max_y*ky-y_indent, dash=(5, 1))
+    canvas.create_oval(max_x*kx+x_indent - 1, canvas_height - max_y*ky-y_indent - 1,
+        max_x*kx+x_indent + 1, canvas_height - max_y*ky-y_indent + 1, width=2)
+    canvas.create_text(max_x*kx+x_indent - 15, canvas_height - max_y*ky-y_indent - 15,
             text = "({};{})".format(max_x, max_y))
 
 
@@ -251,20 +258,6 @@ def solve_task(canvas, listb_set):
 
     canvas.delete("all")
 
-    kx = 0
-    ky = 0
-    draw_all_stuff(canvas, desired_triangle, desired_vertex, dash_vertex, max_x, max_y, kx, ky)
-    
-
-    '''zoom_vars = get_zoom_vars(magic_circles)
-
-    draw_angle(canvas, magic_circles, zoom_vars)
-    zoom(magic_circles, zoom_vars)
-    draw_split_line(canvas, magic_circles)
-
-    form_canvas_coords(magic_circles)
-
-    draw_points(canvas, magic_circles)
-    draw_circles(canvas, magic_circles)
-    draw_ordinate(canvas, zoom_vars)
-    draw_coords(canvas, magic_circles, circles)'''
+    kx, ky, x_min, y_min, x_indent, y_indent = find_odds_for_drawing(desired_triangle, max_x, max_y)
+    print(kx, ky, x_min, y_min, x_indent, y_indent)                                                               # debug info
+    draw_all_stuff(canvas, desired_triangle, desired_vertex, dash_vertex, max_x, max_y, kx, ky, x_indent, y_indent)
