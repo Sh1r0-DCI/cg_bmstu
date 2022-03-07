@@ -4,8 +4,7 @@
     (Для каждого треугольника берется та из трех высот, длина которой максимальна.)
 
 """
-
-
+import tkinter
 from tkinter import *
 
 from task_info import task_info
@@ -16,10 +15,17 @@ from solve_task import solve_task
 
 
 def window_settings(root):
+    mainmenu = Menu(root)
+    root.config(menu=mainmenu)
+
+    helpmenu = Menu(mainmenu, tearoff=0)
+    helpmenu.add_command(label='Об авторе')
+
+    mainmenu.add_cascade(label='Справка', menu=helpmenu)
+
     root.geometry("1300x700+100+50")
     root.title("Lab 1")
     root.configure(background="#899ad5")
-    root.resizable(False, False)
 
 
 def ui(root):
@@ -41,7 +47,10 @@ def ui(root):
     but_task = Button(
         root, height=3, width=20, text="Условие", bg="#899ad5", command=task_info
     )
-    but_task.place(x=30, y=320)
+    print(root.winfo_screenheight())
+    print(but_task.winfo_width()/root.winfo_width())
+    but_task.place(x=30, y=320, relheight=but_task.winfo_reqheight()/root.winfo_screenheight()
+                   , relwidth=but_task.winfo_reqwidth()/root.winfo_screenwidth())
 
     but_ins_point = Button(
         root,
