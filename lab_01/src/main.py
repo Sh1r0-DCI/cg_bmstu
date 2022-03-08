@@ -2,10 +2,10 @@
     На плоскости дано множество точек. Найти такой треугольник
     с вершинами в этих точках, у которого высота имеет максимальную длину.
     (Для каждого треугольника берется та из трех высот, длина которой максимальна.)
-
 """
 import tkinter
 from tkinter import *
+from tkinter import messagebox
 
 from task_info import task_info
 from point_create import point_create
@@ -14,14 +14,18 @@ from point_change import point_change
 from solve_task import solve_task
 
 
+def about_author():
+    messagebox.showinfo(title='Об авторе', message='Салатов Хамит ИУ7-44Б')
+
+
 def window_settings(root):
     mainmenu = Menu(root)
     root.config(menu=mainmenu)
 
     helpmenu = Menu(mainmenu, tearoff=0)
-    helpmenu.add_command(label='Об авторе')
+    helpmenu.add_command(label='Об авторе', command=lambda: about_author())
 
-    mainmenu.add_cascade(label='Справка', menu=helpmenu)  #add command
+    mainmenu.add_cascade(label='Справка', menu=helpmenu)  # add command
 
     root.geometry("1300x700+100+50")
     root.title("Lab 1")
@@ -30,7 +34,7 @@ def window_settings(root):
 
 def ui(root):
     canvas = Canvas(root, width=845, height=694, cursor="tcross")
-    canvas.place(x=450, y=0)
+    canvas.place(x=450, y=0)  # likely to make resizable
 
     label_set = Label(
         root,
@@ -41,12 +45,12 @@ def ui(root):
     )
     label_set.place(x=60, y=5)  # likely to make resizable
 
-    listb_set = Listbox(root, width=50, height=15) #расположение множества
-    listb_set.update()
-    listb_set.place(relx=30/root.winfo_width(),
-                    rely=30/root.winfo_height(),
-                    relwidth=listb_set.winfo_reqwidth()/root.winfo_width(),
-                    relheight=listb_set.winfo_reqheight()/root.winfo_height())
+    listbox_set = Listbox(root, width=50, height=15) # расположение множества
+    listbox_set.update()
+    listbox_set.place(relx=30/root.winfo_width(),
+                      rely=30/root.winfo_height(),
+                      relwidth=listbox_set.winfo_reqwidth()/root.winfo_width(),
+                      relheight=listbox_set.winfo_reqheight()/root.winfo_height())
 
     but_task = Button(
         root,
@@ -68,7 +72,7 @@ def ui(root):
         width=20,
         text="Добавить точку",
         bg="#899ad5",
-        command=lambda: point_create(root, listb_set),
+        command=lambda: point_create(root, listbox_set),
     )
     but_ins_point.update()
     but_ins_point.place(relx=188/root.winfo_width(),
@@ -82,7 +86,7 @@ def ui(root):
         width=20,
         text="Удалить точку",
         bg="#899ad5",
-        command=lambda: point_delete(root, listb_set),
+        command=lambda: point_delete(root, listbox_set),
     )
     but_del_point.update()
     but_del_point.place(relx=188/root.winfo_width(),
@@ -96,7 +100,7 @@ def ui(root):
         width=20,
         text="Изменить точку",
         bg="#899ad5",
-        command=lambda: point_change(root, listb_set),
+        command=lambda: point_change(root, listbox_set),
     )
     but_change_point.update()
     but_change_point.place(relx=188/root.winfo_width(),
@@ -110,7 +114,7 @@ def ui(root):
         width=20,
         text="Очистить множество",
         bg="#899ad5",
-        command=lambda: listb_set.delete(0, END),
+        command=lambda: listbox_set.delete(0, END),
     )
     but_clear_listb.update()
     but_clear_listb.place(relx=188/root.winfo_width(),
@@ -124,7 +128,7 @@ def ui(root):
         width=20,
         text="Решить задачу",
         bg="#899ad5",
-        command=lambda: solve_task(canvas, listb_set),
+        command=lambda: solve_task(canvas, listbox_set),
     )
     but_solve_task.update()
     but_solve_task.place(relx=188/root.winfo_width(),

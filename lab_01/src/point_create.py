@@ -4,7 +4,7 @@ from tkinter.messagebox import showerror
 from toplvl_settings import window_settings
 
 
-def ui(window, listb_set):
+def ui(window, listbox_set):
     var = IntVar()
 
     lab_x = Label(
@@ -45,7 +45,7 @@ def ui(window, listb_set):
         text="Добавить",
         bg="#0082ff",
         command=lambda: process(
-            window, var, entry_x, entry_y, listb_set
+            window, var, entry_x, entry_y, listbox_set
         ),
     )
     but_add.place(x=205, y=120)
@@ -66,7 +66,7 @@ def process(window, var, entry_x, entry_y, listb_set):
         showerror("Ошибка", "Проверьте правильность вводимых данных", parent=window)
 
 
-def point_create(window, listb_set):
+def point_create(window, listbox_set):
     top_window = Toplevel(window)
     window_settings(top_window, "Добавление координат точки")
-    ui(top_window, listb_set)
+    ui(top_window, listbox_set)

@@ -2,10 +2,10 @@ from tkinter import *
 from tkinter.messagebox import showerror
 
 
-def point_delete(window, listb_f_set):
-    listb_f_cursel = listb_f_set.curselection()
+def point_delete(window, listbox_set):
+    listbox_curselection = listbox_set.curselection()
 
     try:
-        listb_f_set.delete(listb_f_cursel)
+        listbox_set.delete(listbox_curselection)
     except:
-        showerror("Ошибка", "Выделите координаты точки для их удаления")
+        showerror(title='Ошибка', message='Выделите координаты точки для их удаления')
