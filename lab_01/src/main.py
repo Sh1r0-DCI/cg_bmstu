@@ -21,7 +21,7 @@ def window_settings(root):
     helpmenu = Menu(mainmenu, tearoff=0)
     helpmenu.add_command(label='Об авторе')
 
-    mainmenu.add_cascade(label='Справка', menu=helpmenu)
+    mainmenu.add_cascade(label='Справка', menu=helpmenu)  #add command
 
     root.geometry("1300x700+100+50")
     root.title("Lab 1")
@@ -32,25 +32,35 @@ def ui(root):
     canvas = Canvas(root, width=845, height=694, cursor="tcross")
     canvas.place(x=450, y=0)
 
-    lab_set = Label(
+    label_set = Label(
         root,
         text="Множество точек",
         font=("Calibri", 15),
         background="#899ad5",
         foreground="black",
     )
-    lab_set.place(x=60, y=5)
+    label_set.place(x=60, y=5)  # likely to make resizable
 
     listb_set = Listbox(root, width=50, height=15) #расположение множества
-    listb_set.place(x=30, y=30)
+    listb_set.update()
+    listb_set.place(relx=30/root.winfo_width(),
+                    rely=30/root.winfo_height(),
+                    relwidth=listb_set.winfo_reqwidth()/root.winfo_width(),
+                    relheight=listb_set.winfo_reqheight()/root.winfo_height())
 
     but_task = Button(
-        root, height=3, width=20, text="Условие", bg="#899ad5", command=task_info
+        root,
+        height=3,
+        width=20,
+        text="Условие",
+        bg="#899ad5",
+        command=task_info
     )
-    print(root.winfo_screenheight())
-    print(but_task.winfo_width()/root.winfo_width())
-    but_task.place(x=30, y=320, relheight=but_task.winfo_reqheight()/root.winfo_screenheight()
-                   , relwidth=but_task.winfo_reqwidth()/root.winfo_screenwidth())
+    but_task.update()
+    but_task.place(relx=30/root.winfo_width(),
+                   rely=320/root.winfo_height(),
+                   relwidth=but_task.winfo_reqwidth()/root.winfo_width(),
+                   relheight=but_task.winfo_reqheight()/root.winfo_height())
 
     but_ins_point = Button(
         root,
@@ -60,7 +70,11 @@ def ui(root):
         bg="#899ad5",
         command=lambda: point_create(root, listb_set),
     )
-    but_ins_point.place(x=188, y=320)
+    but_ins_point.update()
+    but_ins_point.place(relx=188/root.winfo_width(),
+                        rely=320/root.winfo_height(),
+                        relwidth=but_ins_point.winfo_reqwidth()/root.winfo_width(),
+                        relheight=but_ins_point.winfo_reqheight()/root.winfo_height())
 
     but_del_point = Button(
         root,
@@ -70,7 +84,11 @@ def ui(root):
         bg="#899ad5",
         command=lambda: point_delete(root, listb_set),
     )
-    but_del_point.place(x=188, y=390)
+    but_del_point.update()
+    but_del_point.place(relx=188/root.winfo_width(),
+                        rely=390/root.winfo_height(),
+                        relwidth=but_del_point.winfo_reqwidth()/root.winfo_width(),
+                        relheight=but_del_point.winfo_reqheight()/root.winfo_height())
 
     but_change_point = Button(
         root,
@@ -80,7 +98,11 @@ def ui(root):
         bg="#899ad5",
         command=lambda: point_change(root, listb_set),
     )
-    but_change_point.place(x=188, y=460)
+    but_change_point.update()
+    but_change_point.place(relx=188/root.winfo_width(),
+                           rely=460/root.winfo_height(),
+                           relwidth=but_change_point.winfo_reqwidth()/root.winfo_width(),
+                           relheight=but_change_point.winfo_reqheight()/root.winfo_height())
 
     but_clear_listb = Button(
         root,
@@ -90,7 +112,11 @@ def ui(root):
         bg="#899ad5",
         command=lambda: listb_set.delete(0, END),
     )
-    but_clear_listb.place(x=188, y=530)
+    but_clear_listb.update()
+    but_clear_listb.place(relx=188/root.winfo_width(),
+                          rely=530/root.winfo_height(),
+                          relwidth=but_clear_listb.winfo_reqwidth()/root.winfo_width(),
+                          relheight=but_clear_listb.winfo_reqheight()/root.winfo_height())
 
     but_solve_task = Button(
         root,
@@ -100,7 +126,11 @@ def ui(root):
         bg="#899ad5",
         command=lambda: solve_task(canvas, listb_set),
     )
-    but_solve_task.place(x=188, y=610)
+    but_solve_task.update()
+    but_solve_task.place(relx=188/root.winfo_width(),
+                         rely=610/root.winfo_height(),
+                         relwidth=but_solve_task.winfo_reqwidth()/root.winfo_width(),
+                         relheight=but_solve_task.winfo_reqheight()/root.winfo_height())
 
     but_exit = Button(
         root,
@@ -110,7 +140,11 @@ def ui(root):
         bg="#899ad5",
         command=lambda: root.destroy(),
     )
-    but_exit.place(x=30, y=610)
+    but_exit.update()
+    but_exit.place(relx=30/root.winfo_width(),
+                   rely=610/root.winfo_height(),
+                   relwidth=but_exit.winfo_reqwidth()/root.winfo_width(),
+                   relheight=but_exit.winfo_reqheight()/root.winfo_height())
 
 
 def main():
