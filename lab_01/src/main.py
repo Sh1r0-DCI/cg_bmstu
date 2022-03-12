@@ -42,8 +42,9 @@ def window_settings(root):
 
 
 def ui(root):
+    root.update()
     canvas = Canvas(root, width=845, height=694, cursor="tcross")
-    canvas.place(x=450, y=0)  # likely to make resizable
+    canvas.place(relx=450/root.winfo_width(), y=0)
 
     label_set = Label(
         root,
@@ -51,8 +52,15 @@ def ui(root):
         font=("Calibri", 15),
         background="#899ad5",
         foreground="black",
+        # width=30,
+        justify=LEFT
     )
-    label_set.place(x=60, y=5)  # likely to make resizable
+    print(label_set.winfo_reqheight())
+    print(root.winfo_height())
+    label_set.place(relx=60/root.winfo_width(),
+                    rely=5/root.winfo_height(),
+                    relheight=label_set.winfo_reqheight()/root.winfo_height(),
+                    relwidth=label_set.winfo_reqwidth()/root.winfo_width())
 
     listbox_set = Listbox(root, width=50, height=15)  # расположение множества
     listbox_set.update()
@@ -61,17 +69,19 @@ def ui(root):
                       relwidth=listbox_set.winfo_reqwidth()/root.winfo_width(),
                       relheight=listbox_set.winfo_reqheight()/root.winfo_height())
 
-    label_set = Label(
+    label_spinbox = Label(
         root,
         text="N (Количество вершин многоугольника)",
         font=("Calibri", 15),
         background="#899ad5",
         foreground="black",
+        # width=30,
+        justify=LEFT
     )
-    label_set.place(relx=30/root.winfo_width(),
-                    rely=295/root.winfo_height(),
-                    relwidth=label_set.winfo_reqwidth()/root.winfo_width(),
-                    relheight=label_set.winfo_reqheight()/root.winfo_height())  # likely to make resizable
+    label_spinbox.place(relx=30/root.winfo_width(),
+                        rely=295/root.winfo_height(),
+                        relwidth=label_spinbox.winfo_reqwidth()/root.winfo_width(),
+                        relheight=label_spinbox.winfo_reqheight()/root.winfo_height())
 
     spinBox_N = Spinbox(root,
                         width=20,
