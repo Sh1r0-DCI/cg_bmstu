@@ -40,16 +40,6 @@ def form_triangles_list(triangles, set_points):
                     triangles.append(triangle)
 
 
-
-def triangle_to_plot(triangles):
-    coords = ["temp_triangle"]
-#       ????????
-    for i in range(len(triangles)):
-        for j in range(i + 1, len(triangles)):
-            x1 = triangles()
-    return coords
-
-
 def section_len(sx, sy, ex, ey):
     return sqrt((sx - ex)**2 + (sy - ey)**2)
 
@@ -215,12 +205,14 @@ def draw_all_stuff(canvas, desired_triangle, desired_vertex, dash_vertex, max_x,
     canvas.create_oval(max_x*kx+x_indent - 1, canvas_height - max_y*ky-y_indent - 1,
         max_x*kx+x_indent + 1, canvas_height - max_y*ky-y_indent + 1, width=2)
     canvas.create_text(max_x*kx+x_indent - 15, canvas_height - max_y*ky-y_indent - 15,
-            text = "({};{})".format(max_x, max_y))
+            text="({};{})".format(max_x, max_y))
 
 
-def solve_task(canvas, listb_set):
+def solve_task(canvas, listbox_set, spinBox_N):
     coord_set = list(listb_set.get(0, END))
     form_coord_matrix(coord_set)        # making readable form of coordinates
+
+    n_vertices = spinBox_N.getint
 
     f_set = list(listb_set.get(0, END))
     form_coord_matrix(f_set)

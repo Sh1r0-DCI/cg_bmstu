@@ -1,6 +1,5 @@
 # cg_bmstu
-computer graphics labs
+computer graphics labs in bmstu
 
 
-almost all are stolen.
-all original labs included.
+probably stolen...
