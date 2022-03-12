@@ -7,7 +7,6 @@ from tkinter import *
 from tkinter import messagebox
 from tkinter import ttk
 
-from task_info import task_info
 from point_create import point_create
 from point_del import point_delete
 from point_change import point_change
@@ -69,7 +68,10 @@ def ui(root):
         background="#899ad5",
         foreground="black",
     )
-    label_set.place(x=30, y=295)  # likely to make resizable
+    label_set.place(relx=30/root.winfo_width(),
+                    rely=295/root.winfo_height(),
+                    relwidth=label_set.winfo_reqwidth()/root.winfo_width(),
+                    relheight=label_set.winfo_reqheight()/root.winfo_height())  # likely to make resizable
 
     spinBox_N = Spinbox(root,
                         width=20,
