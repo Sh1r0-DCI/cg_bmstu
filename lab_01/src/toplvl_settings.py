@@ -1,6 +1,3 @@
-from tkinter import *
-
-
 def window_settings(window, title):
     window.grab_set()
     window.attributes("-topmost", True)

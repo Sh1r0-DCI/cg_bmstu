@@ -1,11 +1,9 @@
 from tkinter import *
 from tkinter.messagebox import showerror, showinfo
-
 from sympy.geometry import Point, Triangle
-
 from math import sqrt
-
 from copy import deepcopy
+from itertools import combinations
 
 canvas_height = 694
 canvas_width = 845
@@ -19,25 +17,41 @@ def form_coord_matrix(set_points):
         set_points[i][1] = float(set_points[i][1])
 
 
+def is_n_gon(polygon):
+    comb = combinations(polygon, 3)
+    for i in comb:
+        triangle = Triangle(Point(i[0][0], i[0][1]),
+                            Point(i[1][0], i[1][1]),
+                            Point(i[2][0], i[2][1]))
+        print('current triangle:', triangle)
+        if triangle is not Triangle:
+            print('is not triangle')
+            return False
+    return True
 
-def form_triangles_list(triangles, set_points):
-    for i in range(len(set_points)):
-        for j in range(i + 1, len(set_points)):
-            for k in range(j + 1, len(set_points)):
-                res = Triangle(
-                    Point(set_points[i][0], set_points[i][1]),
-                    Point(set_points[j][0], set_points[j][1]),
-                    Point(set_points[k][0], set_points[k][1]),
-                )
 
-                if type(res) is Triangle:
-                    triangle = []
+def form_polygons_list(polygons, coord_set, n_vertices):
+    comb = combinations(coord_set, n_vertices)
+    for i in comb:
+        print('current polygon:', i)
+        if is_n_gon(i):
+            polygons.append(i)
 
-                    triangle.append((float(res.vertices[0][0]), float(res.vertices[0][1])))
-                    triangle.append((float(res.vertices[1][0]), float(res.vertices[1][1])))
-                    triangle.append((float(res.vertices[2][0]), float(res.vertices[2][1])))
 
-                    triangles.append(triangle)
+def gauss_area_algorithm(polygon, n_vertices):  # trapezoid formula
+    trapezoid_sum = 0
+    for i in range(0, n_vertices - 1):
+        trapezoid_sum += (polygon[i][0] - polygon[i+1][0]) * (polygon[i][1] + polygon[i+1][1])
+    return trapezoid_sum / 2
+
+
+def find_desired_polygon(desired_polygon, polygons, n_vertices):
+    max_area = 0
+    for polygon in polygons:
+        cur_area = gauss_area_algorithm(polygon, n_vertices)
+        if cur_area > max_area:
+            max_area = cur_area
+            desired_polygon = deepcopy(polygon)
 
 
 def section_len(sx, sy, ex, ey):
@@ -208,27 +222,21 @@ def draw_all_stuff(canvas, desired_triangle, desired_vertex, dash_vertex, max_x,
             text="({};{})".format(max_x, max_y))
 
 
-def solve_task(canvas, listbox_set, spinBox_N):
-    coord_set = list(listb_set.get(0, END))
-    form_coord_matrix(coord_set)        # making readable form of coordinates
+def solve_task(canvas, listbox_set, n_vertices):
+    # coord_set = list(listbox_set.get(0, END))
+    # form_coord_matrix(coord_set)
+    print((Triangle(Point(0, 0), Point(1, 1), Point(3, 0))) is Triangle)
+    coord_set = ([0, 0], [1, 1], [2, 2], [3, 0])
 
-    n_vertices = spinBox_N.getint
+    polygons = []
+    form_polygons_list(polygons, coord_set, n_vertices)
+    print(polygons)
 
-    f_set = list(listb_set.get(0, END))
-    form_coord_matrix(f_set)
-
-    triangles = []
-    form_triangles_list(triangles, coord_set)
-
-    if len(triangles) < 1:
-        showerror("Ошибка", "Для решения задачи нужно задать хотя бы один треугольник.")
+    if len(polygons) < 1:
+        showerror("Ошибка", "Для решения задачи нужно задать хотя бы один n-угольник.")
         return
 
-    desired_triangle = ((0, 0), (0, 0), (0, 0))
-    max_h = 0
-    max_x = 0
-    max_y = 0
-    alt_side = ''
+    desired_polygon = []
 
     for triangle in triangles:
         cur_h, cur_x, cur_y, cur_side = get_h_of_triangle(triangle[0], triangle[1], triangle[2])
@@ -251,5 +259,8 @@ def solve_task(canvas, listbox_set, spinBox_N):
     canvas.delete("all")
 
     kx, ky, x_min, y_min, x_indent, y_indent = find_odds_for_drawing(desired_triangle, max_x, max_y)
-    print(kx, ky, x_min, y_min, x_indent, y_indent)                                                               # debug info
-    draw_all_stuff(canvas, desired_triangle, desired_vertex, dash_vertex, max_x, max_y, kx, ky, x_indent, y_indent)
+    draw_all_stuff(canvas,
+                   desired_triangle, desired_vertex, dash_vertex,
+                   max_x, max_y,
+                   kx, ky,
+                   x_indent, y_indent)

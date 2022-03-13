@@ -44,7 +44,10 @@ def window_settings(root):
 def ui(root):
     root.update()
     canvas = Canvas(root, width=845, height=694, cursor="tcross")
-    canvas.place(relx=450/root.winfo_width(), y=0)
+    canvas.place(relx=450/root.winfo_width(),
+                 y=0,
+                 relwidth=845/root.winfo_width(),
+                 relheight=694/root.winfo_height())
 
     label_set = Label(
         root,
@@ -169,7 +172,7 @@ def ui(root):
         width=20,
         text="Решить задачу",
         bg="#899ad5",
-        command=lambda: solve_task(canvas, listbox_set, spinBox_N),
+        command=lambda: solve_task(canvas, listbox_set, int(spinBox_N.get()))
     )
     but_solve_task.update()
     but_solve_task.place(relx=188/root.winfo_width(),
