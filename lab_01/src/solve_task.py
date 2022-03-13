@@ -58,12 +58,16 @@ def find_desired_polygon(desired_polygon, polygons, n_vertices):
     max_area = 0
     for polygon in polygons:
         cur_area = gauss_area_algorithm(polygon, n_vertices)
-        print('current polygon:', polygon)
-        print('its area:', cur_area)
+        # print('current polygon:', polygon)
+        # print('its area:', cur_area)
         if cur_area > max_area:
             max_area = cur_area
-            print('new poligon arrived:', polygon)
-            desired_polygon = deepcopy(polygon)
+            # print('new poligon arrived:', polygon)
+            desired_polygon.clear()
+            for i in polygon:
+                desired_polygon.append(i)
+    #         print('dp in func:', desired_polygon)
+    # print('dp in func before return:', desired_polygon)
     return max_area
 
 
@@ -85,6 +89,26 @@ def get_alt_vertex(side_name, triangle):
         return triangle[0]
     else:
         return triangle[1]
+
+
+def find_coefs_for_drawing(desired_polygon):
+    xmin = canvas_width
+    xmax = -canvas_width
+
+    ymin = canvas_height
+    ymax = -canvas_height
+
+    for vertex in desired_polygon:
+        if vertex[0] < xmin:
+            xmin = vertex[0]
+        if vertex[0] > xmax:
+            xmax = vertex[0]
+        if vertex[1] < ymin:
+            ymin = vertex[1]
+        if vertex[1] > ymax:
+            ymax = vertex[1]
+
+    return xmin, xmax, ymin, ymax
 
 
 def find_odds_for_drawing(desired_triangle, max_x, max_y):
@@ -116,7 +140,20 @@ def find_odds_for_drawing(desired_triangle, max_x, max_y):
         k_y = k_x
 
     return k_x, k_y, x_min, y_min, x_indent, y_indent
-        
+
+
+def draw_points(canvas, vertices):
+    for vertex in vertices:
+        canvas.create_oval(vertex[0], canvas_height - vertex[1],
+                           vertex[0], canvas_height - vertex[1], width=2)
+        canvas.create_text(vertex[0] - 15, canvas_height - vertex[1] - 15,
+                           text="({};{})".format(vertex[0], vertex[1]))
+
+
+def draw_everything(canvas, desired_polygon):
+    canvas.create_polygon(desired_polygon, fill='green', outline='black', activefill='cyan')
+    draw_points(canvas, desired_polygon)
+
 
 def draw_all_stuff(canvas, desired_triangle, desired_vertex, dash_vertex, max_x, max_y, kx, ky, x_indent, y_indent):
     ### triangle draw
@@ -132,16 +169,6 @@ def draw_all_stuff(canvas, desired_triangle, desired_vertex, dash_vertex, max_x,
             vertex[0]*kx+x_indent + 1, canvas_height - vertex[1]*ky-y_indent + 1, width=2)
         canvas.create_text(vertex[0]*kx+x_indent - 15, canvas_height - vertex[1]*ky-y_indent - 15,
             text = "({};{})".format(vertex[0], vertex[1]))
-
-    ### altitude draw
-    canvas.create_line(desired_vertex[0]*kx+x_indent, canvas_height - desired_vertex[1]*ky-y_indent,
-                         max_x*kx+x_indent, canvas_height - max_y*ky-y_indent, activefill='red')
-    canvas.create_line(dash_vertex[0]*kx+x_indent, canvas_height - dash_vertex[1]*ky-y_indent,
-                         max_x*kx+x_indent, canvas_height - max_y*ky-y_indent, dash=(5, 1))
-    canvas.create_oval(max_x*kx+x_indent - 1, canvas_height - max_y*ky-y_indent - 1,
-        max_x*kx+x_indent + 1, canvas_height - max_y*ky-y_indent + 1, width=2)
-    canvas.create_text(max_x*kx+x_indent - 15, canvas_height - max_y*ky-y_indent - 15,
-            text="({};{})".format(max_x, max_y))
 
 
 def solve_task(canvas, listbox_set, n_vertices):
@@ -160,17 +187,17 @@ def solve_task(canvas, listbox_set, n_vertices):
     area_of_dp = find_desired_polygon(desired_polygon, polygons, n_vertices)
 
     print(desired_polygon)
-    print(area_of_dp)
 
 
-    # showinfo(
-    #     "Высота",
-    #     "Была получена высота длиной {:.1f} , опущенная на сторону {}".format(max_h, alt_side),
-    # )
+    showinfo(
+        "Площадь",
+        "Была получена площадь в {:.1f} ед.".format(area_of_dp)
+    )
 
     canvas.delete("all")
 
-    # kx, ky, x_min, y_min, x_indent, y_indent = find_odds_for_drawing(desired_triangle, max_x, max_y)
+    draw_everything(canvas, desired_polygon)
+    # kx, ky, x_min, y_min, x_indent, y_indent = find_coefs_for_drawing(desired_polygon)
     # draw_all_stuff(canvas,
     #                desired_triangle, desired_vertex, dash_vertex,
     #                max_x, max_y,
