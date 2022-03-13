@@ -40,10 +40,6 @@ def form_polygons_list(polygons, coord_set, n_vertices):
 
 
 def gauss_area_algorithm(polygon, n_vertices):  # trapezoid formula
-    # trapezoid_sum = 0
-    # for i in range(0, n_vertices - 1):
-    #     trapezoid_sum += abs((polygon[i][0] - polygon[i+1][0]) * (polygon[i][1] + polygon[i+1][1]))
-    # return trapezoid_sum / 2
     pos_sum = 0
     neg_sum = 0
     for i in range(0, n_vertices - 1):
@@ -53,13 +49,29 @@ def gauss_area_algorithm(polygon, n_vertices):  # trapezoid formula
                      neg_sum - polygon[0][0] * polygon[n_vertices - 1][1])
 
 
+def explode_xy(xy):
+    xl=[]
+    yl=[]
+    for i in range(len(xy)):
+        xl.append(xy[i][0])
+        yl.append(xy[i][1])
+    return xl,yl
+
+def shoelace_area(x_list,y_list):
+    a1,a2=0,0
+    x_list.append(x_list[0])
+    y_list.append(y_list[0])
+    for j in range(len(x_list)-1):
+        a1 += x_list[j]*y_list[j+1]
+        a2 += y_list[j]*x_list[j+1]
+    l=abs(a1-a2)/2
+    return l
+
 
 def find_desired_polygon(desired_polygon, polygons, n_vertices):
     max_area = 0
     for polygon in polygons:
         cur_area = gauss_area_algorithm(polygon, n_vertices)
-        # print('current polygon:', polygon)
-        # print('its area:', cur_area)
         if cur_area > max_area:
             max_area = cur_area
             # print('new poligon arrived:', polygon)
@@ -75,28 +87,12 @@ def section_len(sx, sy, ex, ey):
     return sqrt((sx - ex)**2 + (sy - ey)**2)
 
 
-def get_vertex(side_name, triangle):
-    if side_name == 'ab':
-        return triangle[2]
-    if side_name == 'ac':
-        return triangle[1]
-    if side_name == 'bc':
-        return triangle[0]
+def find_coefs_for_drawing(desired_polygon, canvas):
+    xmin = canvas.winfo_reqwidth()
+    xmax = -canvas.winfo_reqwidth()
 
-
-def get_alt_vertex(side_name, triangle):
-    if side_name == 'ab' or side_name == 'ac':
-        return triangle[0]
-    else:
-        return triangle[1]
-
-
-def find_coefs_for_drawing(desired_polygon):
-    xmin = canvas_width
-    xmax = -canvas_width
-
-    ymin = canvas_height
-    ymax = -canvas_height
+    ymin = canvas.winfo_reqheight()
+    ymax = -canvas.winfo_reqheight()
 
     for vertex in desired_polygon:
         if vertex[0] < xmin:
@@ -142,11 +138,16 @@ def find_odds_for_drawing(desired_triangle, max_x, max_y):
     return k_x, k_y, x_min, y_min, x_indent, y_indent
 
 
+def make_printable_coords(desired_polygon, xmin, xmax, ymin, ymax, canvas):
+    for vertex in desired_polygon:
+        vertex[1] = canvas.winfo_reqheight() - vertex[1]
+
+
 def draw_points(canvas, vertices):
     for vertex in vertices:
-        canvas.create_oval(vertex[0], canvas_height - vertex[1],
-                           vertex[0], canvas_height - vertex[1], width=2)
-        canvas.create_text(vertex[0] - 15, canvas_height - vertex[1] - 15,
+        canvas.create_oval(vertex[0], vertex[1],
+                           vertex[0], vertex[1], width=2)
+        canvas.create_text(vertex[0] - 15, vertex[1] - 15,
                            text="({};{})".format(vertex[0], vertex[1]))
 
 
@@ -157,7 +158,6 @@ def draw_everything(canvas, desired_polygon):
 
 def draw_all_stuff(canvas, desired_triangle, desired_vertex, dash_vertex, max_x, max_y, kx, ky, x_indent, y_indent):
     ### triangle draw
-    print(canvas_height-(desired_triangle[0][1]*ky) + y_indent)                   # debug info
     canvas.create_polygon(desired_triangle[0][0] * kx + x_indent, canvas_height - desired_triangle[0][1]*ky - y_indent,
                           desired_triangle[1][0] * kx + x_indent, canvas_height - desired_triangle[1][1]*ky - y_indent,
                           desired_triangle[2][0] * kx + x_indent, canvas_height - desired_triangle[2][1]*ky - y_indent,
@@ -177,7 +177,6 @@ def solve_task(canvas, listbox_set, n_vertices):
 
     polygons = []
     form_polygons_list(polygons, coord_set, n_vertices)
-    print(polygons)
 
     if len(polygons) < 1:
         showerror("Ошибка", "Для решения задачи нужно задать хотя бы один n-угольник.")
@@ -186,16 +185,16 @@ def solve_task(canvas, listbox_set, n_vertices):
     desired_polygon = []
     area_of_dp = find_desired_polygon(desired_polygon, polygons, n_vertices)
 
-    print(desired_polygon)
-
+    xmin, xmax, ymin, ymax = find_coefs_for_drawing(desired_polygon, canvas)
 
     showinfo(
         "Площадь",
         "Была получена площадь в {:.1f} ед.".format(area_of_dp)
     )
 
-    canvas.delete("all")
+    make_printable_coords(desired_polygon, xmin, xmax, ymin, ymax, canvas)
 
+    canvas.delete("all")
     draw_everything(canvas, desired_polygon)
     # kx, ky, x_min, y_min, x_indent, y_indent = find_coefs_for_drawing(desired_polygon)
     # draw_all_stuff(canvas,
