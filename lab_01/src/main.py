@@ -58,8 +58,6 @@ def ui(root):
         # width=30,
         justify=LEFT
     )
-    print(label_set.winfo_reqheight())
-    print(root.winfo_height())
     label_set.place(relx=60/root.winfo_width(),
                     rely=5/root.winfo_height(),
                     relheight=label_set.winfo_reqheight()/root.winfo_height(),

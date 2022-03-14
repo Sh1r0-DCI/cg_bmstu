@@ -49,42 +49,16 @@ def gauss_area_algorithm(polygon, n_vertices):  # trapezoid formula
                      neg_sum - polygon[0][0] * polygon[n_vertices - 1][1])
 
 
-def explode_xy(xy):
-    xl=[]
-    yl=[]
-    for i in range(len(xy)):
-        xl.append(xy[i][0])
-        yl.append(xy[i][1])
-    return xl,yl
-
-def shoelace_area(x_list,y_list):
-    a1,a2=0,0
-    x_list.append(x_list[0])
-    y_list.append(y_list[0])
-    for j in range(len(x_list)-1):
-        a1 += x_list[j]*y_list[j+1]
-        a2 += y_list[j]*x_list[j+1]
-    l=abs(a1-a2)/2
-    return l
-
-
 def find_desired_polygon(desired_polygon, polygons, n_vertices):
     max_area = 0
     for polygon in polygons:
         cur_area = gauss_area_algorithm(polygon, n_vertices)
         if cur_area > max_area:
             max_area = cur_area
-            # print('new poligon arrived:', polygon)
             desired_polygon.clear()
             for i in polygon:
                 desired_polygon.append(i)
-    #         print('dp in func:', desired_polygon)
-    # print('dp in func before return:', desired_polygon)
     return max_area
-
-
-def section_len(sx, sy, ex, ey):
-    return sqrt((sx - ex)**2 + (sy - ey)**2)
 
 
 def find_coefs_for_drawing(desired_polygon, canvas):
@@ -138,22 +112,25 @@ def find_odds_for_drawing(desired_triangle, max_x, max_y):
     return k_x, k_y, x_min, y_min, x_indent, y_indent
 
 
-def make_printable_coords(desired_polygon, xmin, xmax, ymin, ymax, canvas):
-    for vertex in desired_polygon:
+def make_printable_coords(printable_polygon, xmin, xmax, ymin, ymax, canvas):
+    for vertex in printable_polygon:
         vertex[1] = canvas.winfo_reqheight() - vertex[1]
 
 
-def draw_points(canvas, vertices):
-    for vertex in vertices:
-        canvas.create_oval(vertex[0], vertex[1],
-                           vertex[0], vertex[1], width=2)
-        canvas.create_text(vertex[0] - 15, vertex[1] - 15,
-                           text="({};{})".format(vertex[0], vertex[1]))
+def draw_points(canvas, vertices, printable_vertices):
+    print('in dp', vertices[0][0], printable_vertices[0][0])
+    for i in range(len(vertices)):
+        canvas.create_oval(printable_vertices[i][0], printable_vertices[i][1],
+                           printable_vertices[i][0], printable_vertices[i][1], width=5)
+        canvas.create_text(vertices[i][0] - 15, vertices[i][1] - 15,
+                           text="({};{})".format(vertices[i][0], vertices[i][1]))
 
 
-def draw_everything(canvas, desired_polygon):
-    canvas.create_polygon(desired_polygon, fill='green', outline='black', activefill='cyan')
-    draw_points(canvas, desired_polygon)
+def draw_everything(canvas, desired_polygon, printable_polygon):
+    print('in de', desired_polygon[0][1], printable_polygon[0][1])
+    canvas.create_polygon(printable_polygon, fill='green', outline='black', activefill='cyan')
+    print('before dp', desired_polygon[0][1], printable_polygon[0][1])
+    draw_points(canvas, desired_polygon, printable_polygon)
 
 
 def draw_all_stuff(canvas, desired_triangle, desired_vertex, dash_vertex, max_x, max_y, kx, ky, x_indent, y_indent):
@@ -192,10 +169,14 @@ def solve_task(canvas, listbox_set, n_vertices):
         "Была получена площадь в {:.1f} ед.".format(area_of_dp)
     )
 
-    make_printable_coords(desired_polygon, xmin, xmax, ymin, ymax, canvas)
+    printable_polygon = deepcopy(desired_polygon)
+    make_printable_coords(printable_polygon, xmin, xmax, ymin, ymax, canvas)
+    print('after mpc', desired_polygon[0][1], printable_polygon[0][1])
 
     canvas.delete("all")
-    draw_everything(canvas, desired_polygon)
+    canvas.update()
+    print('before de', desired_polygon[0][1], printable_polygon[0][1])
+    draw_everything(canvas, desired_polygon, printable_polygon)
     # kx, ky, x_min, y_min, x_indent, y_indent = find_coefs_for_drawing(desired_polygon)
     # draw_all_stuff(canvas,
     #                desired_triangle, desired_vertex, dash_vertex,
