@@ -3,7 +3,7 @@ from tkinter.messagebox import showerror, showinfo
 from sympy.geometry import Point, Triangle
 from math import sqrt
 from copy import deepcopy
-from itertools import combinations
+from itertools import permutations
 
 canvas_height = 694
 canvas_width = 845
@@ -18,7 +18,7 @@ def form_coord_matrix(set_points):
 
 
 def is_n_gon(polygon):
-    comb = combinations(polygon, 3)
+    comb = permutations(polygon, 3)
     for i in comb:
         if i[2][0] == i[0][0] == i[1][0] or \
                 i[2][1] == i[0][1] == i[1][1]:
@@ -33,7 +33,7 @@ def is_n_gon(polygon):
 
 
 def form_polygons_list(polygons, coord_set, n_vertices):
-    comb = combinations(coord_set, n_vertices)
+    comb = permutations(coord_set, n_vertices)
     for i in comb:
         if is_n_gon(i):
             polygons.append(i)
@@ -53,6 +53,8 @@ def find_desired_polygon(desired_polygon, polygons, n_vertices):
     max_area = 0
     for polygon in polygons:
         cur_area = gauss_area_algorithm(polygon, n_vertices)
+        print('current polygon:', polygon)
+        print('its area:', cur_area)
         if cur_area > max_area:
             max_area = cur_area
             desired_polygon.clear()
@@ -118,18 +120,15 @@ def make_printable_coords(printable_polygon, xmin, xmax, ymin, ymax, canvas):
 
 
 def draw_points(canvas, vertices, printable_vertices):
-    print('in dp', vertices[0][0], printable_vertices[0][0])
     for i in range(len(vertices)):
         canvas.create_oval(printable_vertices[i][0], printable_vertices[i][1],
                            printable_vertices[i][0], printable_vertices[i][1], width=5)
-        canvas.create_text(vertices[i][0] - 15, vertices[i][1] - 15,
+        canvas.create_text(printable_vertices[i][0] - 15, printable_vertices[i][1] - 15,
                            text="({};{})".format(vertices[i][0], vertices[i][1]))
 
 
 def draw_everything(canvas, desired_polygon, printable_polygon):
-    print('in de', desired_polygon[0][1], printable_polygon[0][1])
     canvas.create_polygon(printable_polygon, fill='green', outline='black', activefill='cyan')
-    print('before dp', desired_polygon[0][1], printable_polygon[0][1])
     draw_points(canvas, desired_polygon, printable_polygon)
 
 
@@ -171,15 +170,7 @@ def solve_task(canvas, listbox_set, n_vertices):
 
     printable_polygon = deepcopy(desired_polygon)
     make_printable_coords(printable_polygon, xmin, xmax, ymin, ymax, canvas)
-    print('after mpc', desired_polygon[0][1], printable_polygon[0][1])
 
     canvas.delete("all")
     canvas.update()
-    print('before de', desired_polygon[0][1], printable_polygon[0][1])
     draw_everything(canvas, desired_polygon, printable_polygon)
-    # kx, ky, x_min, y_min, x_indent, y_indent = find_coefs_for_drawing(desired_polygon)
-    # draw_all_stuff(canvas,
-    #                desired_triangle, desired_vertex, dash_vertex,
-    #                max_x, max_y,
-    #                kx, ky,
-    #                x_indent, y_indent)
