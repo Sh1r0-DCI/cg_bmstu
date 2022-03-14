@@ -116,10 +116,8 @@ def find_odds_for_drawing(desired_triangle, max_x, max_y):
 
 def make_printable_coords(printable_polygon, xmin, xmax, ymin, ymax, canvas):
     for vertex in printable_polygon:
-        vertex[0] = 100 + (vertex[0] - xmin)(canvas.winfo_reqwidth() - 100) \
-                    / (xmax - xmin)
-        vertex[1] = canvas.winfo_reqheight() - canvas.winfo_reqheight() / 2 + \
-                    (canvas.winfo_reqheight() / 2) / (canvas.winfo_reqheight() / vertex[1])
+        vertex[0] = 100 + (vertex[0] - xmin)*((canvas.winfo_reqwidth() - 100) - 100) / (xmax - xmin)
+        vertex[1] = canvas.winfo_reqheight() - 100 - (vertex[1] - ymin)*((canvas.winfo_reqheight() -100) - 100) / (ymax - ymin)
 
 
 def draw_points(canvas, vertices, printable_vertices):
