@@ -53,8 +53,6 @@ def find_desired_polygon(desired_polygon, polygons, n_vertices):
     max_area = 0
     for polygon in polygons:
         cur_area = gauss_area_algorithm(polygon, n_vertices)
-        print('current polygon:', polygon)
-        print('its area:', cur_area)
         if cur_area > max_area:
             max_area = cur_area
             desired_polygon.clear()
