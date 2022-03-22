@@ -4,7 +4,7 @@ from tkinter import messagebox
 from tkinter import ttk
 
 
-task = "Данная программа производит преобразования исходного изображения " \
+prog_info = "Данная программа производит преобразования исходного изображения " \
        "(Перенос, масштабирование, поворот)"
 
 
@@ -13,10 +13,12 @@ def about_author():
 
 
 def about_program():
-    messagebox.showinfo(title='О программе', message=task)
+    messagebox.showinfo(title='О программе', message=prog_info)
 
 
 def window_settings(root):
+    root.title("cg lab 2")
+
     mainmenu = Menu(root)
     root.config(menu=mainmenu)
 
@@ -31,6 +33,7 @@ def window_settings(root):
 
     editmenu = Menu(mainmenu, tearoff=0)
     editmenu.add_command(label='Отменить последнее действие')
+    editmenu.add_command(label='Вернуться к исходному изображению')
 
     mainmenu.add_cascade(label='Справка',
                          menu=helpmenu, )
@@ -42,129 +45,296 @@ def window_settings(root):
     root.configure(background="#899ad5")
 
 
+temp_mouse_coor_x = 0
+temp_mouse_coor_y = 0
+
+
+def mouse_clicked(event):
+    # print point
+    # spinBox_center_x.set(event.x)
+    # spinBox_center_y.set(event.y)
+    temp_mouse_coor_x = event.x
+    temp_mouse_coor_y = event.y
+
+
 def ui(root):
     root.update()
-    canvas = Canvas(root, width=845, height=694, cursor="tcross")
-    canvas.place(relx=450/root.winfo_width(),
-                 y=0,
-                 relwidth=845/root.winfo_width(),
-                 relheight=694/root.winfo_height())
+    canvas = Canvas(root, width=955, height=690, cursor="tcross")
+    canvas.place(relx=340/root.winfo_width(),
+                 y=5,
+                 relwidth=955/root.winfo_width(),
+                 relheight=690/root.winfo_height())
 
-    label_set = Label(
+    label_move = Label(
         root,
-        text="Множество точек",
+        text="Перенос",
         font=("Calibri", 15),
         background="#899ad5",
         foreground="black",
         # width=30,
         justify=LEFT
     )
-    label_set.place(relx=60/root.winfo_width(),
-                    rely=5/root.winfo_height(),
-                    relheight=label_set.winfo_reqheight()/root.winfo_height(),
-                    relwidth=label_set.winfo_reqwidth()/root.winfo_width())
+    label_move.place(relx=120/root.winfo_width(),
+                     rely=5/root.winfo_height(),
+                     relheight=label_move.winfo_reqheight()/root.winfo_height(),
+                     relwidth=label_move.winfo_reqwidth()/root.winfo_width())
 
-    listbox_set = Listbox(root, width=50, height=15)  # расположение множества
-    listbox_set.update()
-    listbox_set.place(relx=30/root.winfo_width(),
-                      rely=30/root.winfo_height(),
-                      relwidth=listbox_set.winfo_reqwidth()/root.winfo_width(),
-                      relheight=listbox_set.winfo_reqheight()/root.winfo_height())
-
-    label_spinbox = Label(
+    label_dx = Label(
         root,
-        text="N (Количество вершин многоугольника)",
+        text="dx",
+        font=("Calibri", 11),
+        background="#899ad5",
+        foreground="black",
+        # width=30,
+        justify=LEFT
+    )
+    label_dx.place(relx=30/root.winfo_width(),
+                   rely=30/root.winfo_height(),
+                   relheight=label_dx.winfo_reqheight()/root.winfo_height(),
+                   relwidth=label_dx.winfo_reqwidth()/root.winfo_width())
+
+    spinBox_move_x = Spinbox(root,
+                             width=10,
+                             from_=-1000,
+                             to=1000,
+                             textvariable=tkinter.StringVar(value=0))
+    spinBox_move_x.place(relx=60/root.winfo_width(),
+                         rely=30/root.winfo_height(),
+                         relwidth=spinBox_move_x.winfo_reqwidth()/root.winfo_width(),
+                         relheight=spinBox_move_x.winfo_reqheight()/root.winfo_height())
+
+    label_dy = Label(
+        root,
+        text="dy",
+        font=("Calibri", 11),
+        background="#899ad5",
+        foreground="black",
+        # width=30,
+        justify=LEFT
+    )
+    label_dy.place(relx=270/root.winfo_width(),
+                   rely=25/root.winfo_height(),
+                   relheight=label_dy.winfo_reqheight()/root.winfo_height(),
+                   relwidth=label_dy.winfo_reqwidth()/root.winfo_width())
+
+    spinBox_move_y = Spinbox(root,
+                             width=10,
+                             from_=-1000,
+                             to=1000,
+                             textvariable=tkinter.StringVar(value=0))
+    spinBox_move_y.place(relx=190/root.winfo_width(),
+                         rely=30/root.winfo_height(),
+                         relwidth=spinBox_move_y.winfo_reqwidth()/root.winfo_width(),
+                         relheight=spinBox_move_y.winfo_reqheight()/root.winfo_height())
+
+    but_move = Button(
+        root,
+        height=2,
+        width=9,
+        text="Перенести",
+        bg="#899ad5",
+        # command=lambda: point_create(root, listbox_set),
+    )
+    but_move.update()
+    but_move.place(relx=120/root.winfo_width(),
+                   rely=60/root.winfo_height(),
+                   relwidth=but_move.winfo_reqwidth()/root.winfo_width(),
+                   relheight=but_move.winfo_reqheight()/root.winfo_height())
+
+    label_scale = Label(
+        root,
+        text="Масштабирование",
         font=("Calibri", 15),
         background="#899ad5",
         foreground="black",
         # width=30,
         justify=LEFT
     )
-    label_spinbox.place(relx=30/root.winfo_width(),
-                        rely=295/root.winfo_height(),
-                        relwidth=label_spinbox.winfo_reqwidth()/root.winfo_width(),
-                        relheight=label_spinbox.winfo_reqheight()/root.winfo_height())
+    label_scale.place(relx=80/root.winfo_width(),
+                      rely=205/root.winfo_height(),
+                      relheight=label_scale.winfo_reqheight()/root.winfo_height(),
+                      relwidth=label_scale.winfo_reqwidth()/root.winfo_width())
 
-    spinBox_N = Spinbox(root,
-                        width=20,
-                        from_=3,
-                        to=20,
-                        textvariable=3)
-    spinBox_N.place(relx=30/root.winfo_width(),
-                    rely=320/root.winfo_height(),
-                    relwidth=spinBox_N.winfo_reqwidth()/root.winfo_width(),
-                    relheight=spinBox_N.winfo_reqheight()/root.winfo_height())
-
-    but_ins_point = Button(
+    label_kx = Label(
         root,
-        height=3,
-        width=20,
-        text="Добавить точку",
-        bg="#899ad5",
-        command=lambda: point_create(root, listbox_set),
+        text="dx",
+        font=("Calibri", 11),
+        background="#899ad5",
+        foreground="black",
+        # width=30,
+        justify=LEFT
     )
-    but_ins_point.update()
-    but_ins_point.place(relx=30/root.winfo_width(),
-                        rely=390/root.winfo_height(),
-                        relwidth=but_ins_point.winfo_reqwidth()/root.winfo_width(),
-                        relheight=but_ins_point.winfo_reqheight()/root.winfo_height())
+    label_kx.place(relx=30/root.winfo_width(),
+                   rely=230/root.winfo_height(),
+                   relheight=label_kx.winfo_reqheight()/root.winfo_height(),
+                   relwidth=label_kx.winfo_reqwidth()/root.winfo_width())
 
-    but_del_point = Button(
+    spinBox_scale_x = Spinbox(root,
+                              width=10,
+                              from_=-1000,
+                              to=1000,
+                              textvariable=tkinter.StringVar(value=0))
+    spinBox_scale_x.place(relx=60/root.winfo_width(),
+                          rely=230/root.winfo_height(),
+                          relwidth=spinBox_scale_x.winfo_reqwidth()/root.winfo_width(),
+                          relheight=spinBox_scale_x.winfo_reqheight()/root.winfo_height())
+
+    label_ky = Label(
         root,
-        height=3,
-        width=20,
-        text="Удалить точку",
-        bg="#899ad5",
-        command=lambda: point_delete(root, listbox_set),
+        text="dy",
+        font=("Calibri", 11),
+        background="#899ad5",
+        foreground="black",
+        # width=30,
+        justify=LEFT
     )
-    but_del_point.update()
-    but_del_point.place(relx=30/root.winfo_width(),
-                        rely=460/root.winfo_height(),
-                        relwidth=but_del_point.winfo_reqwidth()/root.winfo_width(),
-                        relheight=but_del_point.winfo_reqheight()/root.winfo_height())
+    label_ky.place(relx=270/root.winfo_width(),
+                   rely=225/root.winfo_height(),
+                   relheight=label_ky.winfo_reqheight()/root.winfo_height(),
+                   relwidth=label_ky.winfo_reqwidth()/root.winfo_width())
 
-    but_change_point = Button(
+    spinBox_scale_y = Spinbox(root,
+                              width=10,
+                              from_=-1000,
+                              to=1000,
+                              textvariable=tkinter.StringVar(value=0))
+    spinBox_scale_y.place(relx=190/root.winfo_width(),
+                          rely=230/root.winfo_height(),
+                          relwidth=spinBox_scale_y.winfo_reqwidth()/root.winfo_width(),
+                          relheight=spinBox_scale_y.winfo_reqheight()/root.winfo_height())
+
+    but_scale = Button(
         root,
-        height=3,
-        width=20,
-        text="Изменить точку",
+        height=2,
+        width=13,
+        text="Масштабировать",
         bg="#899ad5",
-        command=lambda: point_change(root, listbox_set),
+        # command=lambda: point_create(root, listbox_set),
     )
-    but_change_point.update()
-    but_change_point.place(relx=188/root.winfo_width(),
-                           rely=390/root.winfo_height(),
-                           relwidth=but_change_point.winfo_reqwidth()/root.winfo_width(),
-                           relheight=but_change_point.winfo_reqheight()/root.winfo_height())
+    but_scale.update()
+    but_scale.place(relx=115/root.winfo_width(),
+                    rely=260/root.winfo_height(),
+                    relwidth=but_scale.winfo_reqwidth()/root.winfo_width(),
+                    relheight=but_scale.winfo_reqheight()/root.winfo_height())
 
-    but_clear_listb = Button(
+    label_rotate = Label(
         root,
-        height=3,
-        width=20,
-        text="Очистить множество",
-        bg="#899ad5",
-        command=lambda: listbox_set.delete(0, END),
+        text="Поворот",
+        font=("Calibri", 15),
+        background="#899ad5",
+        foreground="black",
+        # width=30,
+        justify=LEFT
     )
-    but_clear_listb.update()
-    but_clear_listb.place(relx=188/root.winfo_width(),
-                          rely=460/root.winfo_height(),
-                          relwidth=but_clear_listb.winfo_reqwidth()/root.winfo_width(),
-                          relheight=but_clear_listb.winfo_reqheight()/root.winfo_height())
+    label_rotate.place(relx=130/root.winfo_width(),
+                       rely=405/root.winfo_height(),
+                       relheight=label_rotate.winfo_reqheight()/root.winfo_height(),
+                       relwidth=label_rotate.winfo_reqwidth()/root.winfo_width())
 
-
-    but_solve_task = Button(
+    label_angle = Label(
         root,
-        height=3,
-        width=20,
-        text="Решить задачу",
-        bg="#899ad5",
-        command=lambda: solve_task(canvas, listbox_set, int(spinBox_N.get()))
+        text="Угол в °",
+        font=("Calibri", 11),
+        background="#899ad5",
+        foreground="black",
+        # width=30,
+        justify=LEFT
     )
-    but_solve_task.update()
-    but_solve_task.place(relx=188/root.winfo_width(),
-                         rely=610/root.winfo_height(),
-                         relwidth=but_solve_task.winfo_reqwidth()/root.winfo_width(),
-                         relheight=but_solve_task.winfo_reqheight()/root.winfo_height())
+    label_angle.place(relx=30/root.winfo_width(),
+                      rely=430/root.winfo_height(),
+                      relheight=label_angle.winfo_reqheight()/root.winfo_height(),
+                      relwidth=label_angle.winfo_reqwidth()/root.winfo_width())
+
+    spinBox_rotate = Spinbox(root,
+                             width=10,
+                             from_=-1000,
+                             to=1000,
+                             textvariable=tkinter.StringVar(value=0))
+    spinBox_rotate.place(relx=130/root.winfo_width(),
+                         rely=430/root.winfo_height(),
+                         relwidth=spinBox_rotate.winfo_reqwidth()/root.winfo_width(),
+                         relheight=spinBox_rotate.winfo_reqheight()/root.winfo_height())
+
+    but_rotate = Button(
+        root,
+        height=2,
+        width=9,
+        text="Повернуть",
+        bg="#899ad5",
+        # command=lambda: point_create(root, listbox_set),
+    )
+    but_rotate.update()
+    but_rotate.place(relx=130/root.winfo_width(),
+                     rely=460/root.winfo_height(),
+                     relwidth=but_rotate.winfo_reqwidth()/root.winfo_width(),
+                     relheight=but_rotate.winfo_reqheight()/root.winfo_height())
+
+    label_center = Label(
+        root,
+        text="Центр масштабирования и поворота",
+        font=("Calibri", 15),
+        background="#899ad5",
+        foreground="black",
+        # width=30,
+        justify=LEFT
+    )
+    label_center.place(relx=10/root.winfo_width(),
+                       rely=565/root.winfo_height(),
+                       relheight=label_center.winfo_reqheight()/root.winfo_height(),
+                       relwidth=label_center.winfo_reqwidth()/root.winfo_width())
+
+    mouse_coor_x = IntVar(root, value=temp_mouse_coor_x)
+    mouse_coor_y = IntVar(root, value=temp_mouse_coor_y)
+
+    label_cx = Label(
+        root,
+        text="X",
+        font=("Calibri", 11),
+        background="#899ad5",
+        foreground="black",
+        # width=30,
+        justify=LEFT
+    )
+    label_cx.place(relx=30/root.winfo_width(),
+                   rely=590/root.winfo_height(),
+                   relheight=label_cx.winfo_reqheight()/root.winfo_height(),
+                   relwidth=label_cx.winfo_reqwidth()/root.winfo_width())
+
+    spinBox_center_x = Spinbox(root,
+                               width=10,
+                               from_=-1000,
+                               to=1000,
+                               textvariable=tkinter.StringVar(value=0))
+    spinBox_center_x.place(relx=60/root.winfo_width(),
+                           rely=590/root.winfo_height(),
+                           relwidth=spinBox_center_x.winfo_reqwidth()/root.winfo_width(),
+                           relheight=spinBox_center_x.winfo_reqheight()/root.winfo_height())
+
+    label_cy = Label(
+        root,
+        text="Y",
+        font=("Calibri", 11),
+        background="#899ad5",
+        foreground="black",
+        # width=30,
+        justify=LEFT
+    )
+    label_cy.place(relx=270/root.winfo_width(),
+                   rely=590/root.winfo_height(),
+                   relheight=label_cy.winfo_reqheight()/root.winfo_height(),
+                   relwidth=label_cy.winfo_reqwidth()/root.winfo_width())
+
+    spinBox_center_y = Spinbox(root,
+                               width=10,
+                               from_=-1000,
+                               to=1000,
+                               textvariable=tkinter.StringVar(value=0))
+    spinBox_center_y.place(relx=190/root.winfo_width(),
+                           rely=590/root.winfo_height(),
+                           relwidth=spinBox_center_y.winfo_reqwidth()/root.winfo_width(),
+                           relheight=spinBox_center_y.winfo_reqheight()/root.winfo_height())
+
+    canvas.bind("<Button-1>", mouse_clicked)
 
 
 def main():
