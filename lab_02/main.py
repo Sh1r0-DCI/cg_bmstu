@@ -45,18 +45,6 @@ def window_settings(root):
     root.configure(background="#899ad5")
 
 
-temp_mouse_coor_x = 0
-temp_mouse_coor_y = 0
-
-
-def mouse_clicked(event):
-    # print point
-    # spinBox_center_x.set(event.x)
-    # spinBox_center_y.set(event.y)
-    temp_mouse_coor_x = event.x
-    temp_mouse_coor_y = event.y
-
-
 def ui(root):
     root.update()
     canvas = Canvas(root, width=955, height=690, cursor="tcross")
@@ -283,9 +271,6 @@ def ui(root):
                        relheight=label_center.winfo_reqheight()/root.winfo_height(),
                        relwidth=label_center.winfo_reqwidth()/root.winfo_width())
 
-    mouse_coor_x = IntVar(root, value=temp_mouse_coor_x)
-    mouse_coor_y = IntVar(root, value=temp_mouse_coor_y)
-
     label_cx = Label(
         root,
         text="X",
@@ -334,6 +319,12 @@ def ui(root):
                            relwidth=spinBox_center_y.winfo_reqwidth()/root.winfo_width(),
                            relheight=spinBox_center_y.winfo_reqheight()/root.winfo_height())
 
+    def mouse_clicked(event):
+        # print point
+        spinBox_center_x.delete(0, END)
+        spinBox_center_x.insert(0, event.x)
+        spinBox_center_y.delete(0, END)
+        spinBox_center_y.insert(0, event.y)
     canvas.bind("<Button-1>", mouse_clicked)
 
 
