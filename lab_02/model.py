@@ -82,10 +82,10 @@ def form_vertices_list():
 
 def draw_sides(canvas, vertices_x, vertices_y, parts):
     for i in range(len(parts)):
-        # for j in range(len(vertices_x[i]) - 1):
-            # canvas.create_oval(vertices_x[i][j], vertices_y[i][j],
-            #                    vertices_x[i][j], vertices_y[i][j], width=5)
-        canvas.create_polygon(parts[i], outline='black', fill='')
+        for j in range(len(vertices_x[i]) - 1):
+            canvas.create_line(parts[i][j], parts[i][j + 1])
+        # canvas.create_polygon(parts[i], outline='black', fill='')
+
 
 # (437, 385) (320, 375)
 def draw_model(canvas):
