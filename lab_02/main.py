@@ -3,6 +3,8 @@ from tkinter import *
 from tkinter import messagebox
 from tkinter import ttk
 
+from model import draw_model
+
 
 prog_info = "Данная программа производит преобразования исходного изображения " \
        "(Перенос, масштабирование, поворот)"
@@ -325,7 +327,10 @@ def ui(root):
         spinBox_center_x.insert(0, event.x)
         spinBox_center_y.delete(0, END)
         spinBox_center_y.insert(0, event.y)
+
     canvas.bind("<Button-1>", mouse_clicked)
+
+    draw_model(canvas)
 
 
 def main():

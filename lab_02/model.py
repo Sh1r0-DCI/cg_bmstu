@@ -1,7 +1,5 @@
 from collections import namedtuple
-
-
-Coords = namedtuple("Coords", ["x", "y"])
+from copy import deepcopy
 
 parts_x = []
 parts_y = []
@@ -64,4 +62,33 @@ parts_x.append([350, 318, 355, 309, 348, 306, 340, 297, 336, 292, 315])
 parts_y.append([165, 174, 191, 201, 216, 222, 242, 244, 254, 278, 282])
 
 
-original_model = Coords(parts_x, parts_y)
+original_parts_x = deepcopy(parts_x)
+original_parts_y = deepcopy(parts_y)
+
+
+def form_vertices_list():
+    parts = []
+    for i in range(len(parts_x)):
+        new_poly = []
+        for j in range(len(parts_x[i])):
+            new_vert = []
+            new_vert.append(parts_x[i][j])
+            new_vert.append(parts_y[i][j])
+
+            new_poly.append(new_vert)
+        parts.append(new_poly)
+    return parts
+
+
+def draw_sides(canvas, vertices_x, vertices_y, parts):
+    for i in range(len(parts)):
+        # for j in range(len(vertices_x[i]) - 1):
+            # canvas.create_oval(vertices_x[i][j], vertices_y[i][j],
+            #                    vertices_x[i][j], vertices_y[i][j], width=5)
+        canvas.create_polygon(parts[i], outline='black', fill='')
+
+# (437, 385) (320, 375)
+def draw_model(canvas):
+    parts = form_vertices_list()
+    draw_sides(canvas, parts_x, parts_y, parts)
+
