@@ -89,6 +89,11 @@ def draw_sides(canvas, vertices_x, vertices_y, parts):
 
 # (437, 385) (320, 375)
 def draw_model(canvas):
+    canvas.delete("all")
     parts = form_vertices_list()
     draw_sides(canvas, parts_x, parts_y, parts)
 
+def draw_original_model(canvas):
+    parts_x = deepcopy(original_parts_x)
+    parts_y = deepcopy(original_parts_y)
+    draw_model(canvas)

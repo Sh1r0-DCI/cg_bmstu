@@ -3,7 +3,7 @@ from tkinter import *
 from tkinter import messagebox
 from tkinter import ttk
 
-from model import draw_model
+from model import draw_model, draw_original_model
 
 
 prog_info = "Данная программа производит преобразования исходного изображения " \
@@ -18,8 +18,53 @@ def about_program():
     messagebox.showinfo(title='О программе', message=prog_info)
 
 
-def window_settings(root):
+# def window_settings(root):
+#     root.title("cg lab 2")
+#
+#     canvas = Canvas(root, width=955, height=690, cursor="tcross")
+#     canvas.place(relx=340/root.winfo_width(),
+#                  y=5,
+#                  relwidth=955/root.winfo_width(),
+#                  relheight=690/root.winfo_height())
+#
+#     mainmenu = Menu(root)
+#     root.config(menu=mainmenu)
+#
+#     helpmenu = Menu(mainmenu, tearoff=0)
+#     helpmenu.add_command(label='Об авторе',
+#                          command=lambda: about_author())
+#     helpmenu.add_command(label='О программе',
+#                          command=lambda: about_program())
+#     helpmenu.add_separator()
+#     helpmenu.add_command(label='Выход',
+#                          command=lambda: root.destroy())
+#
+#     editmenu = Menu(mainmenu, tearoff=0)
+#     editmenu.add_command(label='Отменить последнее действие')
+#     editmenu.add_command(label='Вернуться к исходному изображению',
+#                          command=draw_original_model(canvas))
+#
+#     mainmenu.add_cascade(label='Справка',
+#                          menu=helpmenu, )
+#     mainmenu.add_cascade(label='Правка',
+#                          menu=editmenu)
+#
+#     root.geometry("1300x700+100+50")
+#     root.title("Lab 1")
+#     root.configure(background="#899ad5")
+
+
+def ui(root):
     root.title("cg lab 2")
+    root.geometry("1300x700+100+50")
+    root.configure(background="#899ad5")
+    root.update()
+
+    canvas = Canvas(root, width=955, height=690, cursor="tcross")
+    canvas.place(relx=340/root.winfo_width(),
+                 y=5,
+                 relwidth=955/root.winfo_width(),
+                 relheight=690/root.winfo_height())
 
     mainmenu = Menu(root)
     root.config(menu=mainmenu)
@@ -35,25 +80,15 @@ def window_settings(root):
 
     editmenu = Menu(mainmenu, tearoff=0)
     editmenu.add_command(label='Отменить последнее действие')
-    editmenu.add_command(label='Вернуться к исходному изображению')
+    editmenu.add_command(label='Вернуться к исходному изображению',
+                         command=lambda: draw_original_model(canvas))
 
     mainmenu.add_cascade(label='Справка',
                          menu=helpmenu, )
     mainmenu.add_cascade(label='Правка',
                          menu=editmenu)
 
-    root.geometry("1300x700+100+50")
-    root.title("Lab 1")
-    root.configure(background="#899ad5")
-
-
-def ui(root):
-    root.update()
-    canvas = Canvas(root, width=955, height=690, cursor="tcross")
-    canvas.place(relx=340/root.winfo_width(),
-                 y=5,
-                 relwidth=955/root.winfo_width(),
-                 relheight=690/root.winfo_height())
+    # ___________________________________________________
 
     label_move = Label(
         root,
@@ -336,7 +371,7 @@ def ui(root):
 def main():
     root = Tk()
 
-    window_settings(root)
+    # window_settings(root)
     ui(root)
 
     root.mainloop()
