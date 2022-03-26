@@ -1,5 +1,5 @@
-from collections import namedtuple
 from copy import deepcopy
+from tkinter import messagebox
 
 parts_x = []
 parts_y = []
@@ -65,6 +65,9 @@ parts_y.append([165, 174, 191, 201, 216, 222, 242, 244, 254, 278, 282])
 original_parts_x = deepcopy(parts_x)
 original_parts_y = deepcopy(parts_y)
 
+prev_x = deepcopy(parts_x)
+prev_y = deepcopy(parts_y)
+
 
 def form_vertices_list():
     parts = []
@@ -93,7 +96,31 @@ def draw_model(canvas):
     parts = form_vertices_list()
     draw_sides(canvas, parts_x, parts_y, parts)
 
+
+def ret_to_prev_action(canvas):
+    global parts_x, parts_y, prev_x, prev_y
+
+    if parts_x == prev_x and parts_y == prev_y:
+        messagebox.showerror(title='Только вперед', message='Назад пути нет .-.')
+        return
+
+    parts_x = deepcopy(prev_x)
+    parts_y = deepcopy(prev_y)
+
+    draw_model(canvas)
+
+
 def draw_original_model(canvas):
+    global parts_x, parts_y, prev_x, prev_y
+
+    if parts_x == original_parts_x and parts_y == original_parts_y:
+        messagebox.showerror(title='Лучше уже не будет', message='Куда еще исходнее? 0_o')
+        return
+
+    prev_x = deepcopy(parts_x)
+    prev_y = deepcopy(parts_y)
+
     parts_x = deepcopy(original_parts_x)
     parts_y = deepcopy(original_parts_y)
+
     draw_model(canvas)
