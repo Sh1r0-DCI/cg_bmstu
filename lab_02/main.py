@@ -1,9 +1,9 @@
 import tkinter
 from tkinter import *
 from tkinter import messagebox
-from tkinter import ttk
 
 from model import draw_model, draw_original_model, ret_to_prev_action
+from model import move_model, scale_model, rotate_model
 
 
 prog_info = "Данная программа производит преобразования исходного изображения " \
@@ -54,6 +54,68 @@ def ui(root):
                          menu=editmenu)
 
     # ___________________________________________________
+
+    label_center = Label(
+        root,
+        text="Центр масштабирования и поворота",
+        font=("Calibri", 15),
+        background="#899ad5",
+        foreground="black",
+        # width=30,
+        justify=LEFT
+    )
+    label_center.place(relx=10/root.winfo_width(),
+                       rely=565/root.winfo_height(),
+                       relheight=label_center.winfo_reqheight()/root.winfo_height(),
+                       relwidth=label_center.winfo_reqwidth()/root.winfo_width())
+
+    label_cx = Label(
+        root,
+        text="X",
+        font=("Calibri", 11),
+        background="#899ad5",
+        foreground="black",
+        # width=30,
+        justify=LEFT
+    )
+    label_cx.place(relx=30/root.winfo_width(),
+                   rely=590/root.winfo_height(),
+                   relheight=label_cx.winfo_reqheight()/root.winfo_height(),
+                   relwidth=label_cx.winfo_reqwidth()/root.winfo_width())
+
+    spinBox_center_x = Spinbox(root,
+                               width=10,
+                               from_=-1000,
+                               to=1000,
+                               textvariable=tkinter.StringVar(value=0))
+    spinBox_center_x.place(relx=60/root.winfo_width(),
+                           rely=590/root.winfo_height(),
+                           relwidth=spinBox_center_x.winfo_reqwidth()/root.winfo_width(),
+                           relheight=spinBox_center_x.winfo_reqheight()/root.winfo_height())
+
+    label_cy = Label(
+        root,
+        text="Y",
+        font=("Calibri", 11),
+        background="#899ad5",
+        foreground="black",
+        # width=30,
+        justify=LEFT
+    )
+    label_cy.place(relx=270/root.winfo_width(),
+                   rely=590/root.winfo_height(),
+                   relheight=label_cy.winfo_reqheight()/root.winfo_height(),
+                   relwidth=label_cy.winfo_reqwidth()/root.winfo_width())
+
+    spinBox_center_y = Spinbox(root,
+                               width=10,
+                               from_=-1000,
+                               to=1000,
+                               textvariable=tkinter.StringVar(value=0))
+    spinBox_center_y.place(relx=190/root.winfo_width(),
+                           rely=590/root.winfo_height(),
+                           relwidth=spinBox_center_y.winfo_reqwidth()/root.winfo_width(),
+                           relheight=spinBox_center_y.winfo_reqheight()/root.winfo_height())
 
     label_move = Label(
         root,
@@ -123,7 +185,7 @@ def ui(root):
         width=9,
         text="Перенести",
         bg="#899ad5",
-        # command=lambda: point_create(root, listbox_set),
+        command=lambda: move_model(canvas, int(spinBox_move_x.get()), int(spinBox_move_y.get()))
     )
     but_move.update()
     but_move.place(relx=120/root.winfo_width(),
@@ -199,7 +261,8 @@ def ui(root):
         width=13,
         text="Масштабировать",
         bg="#899ad5",
-        # command=lambda: point_create(root, listbox_set),
+        command=lambda: scale_model(canvas, float(spinBox_scale_x.get()), float(spinBox_scale_y.get()),
+                                    [int(spinBox_center_x.get()), int(spinBox_center_y.get())])
     )
     but_scale.update()
     but_scale.place(relx=115/root.winfo_width(),
@@ -251,75 +314,14 @@ def ui(root):
         width=9,
         text="Повернуть",
         bg="#899ad5",
-        # command=lambda: point_create(root, listbox_set),
+        command=lambda: rotate_model(canvas, int(spinBox_rotate.get()),
+                                    [int(spinBox_center_x.get()), int(spinBox_center_y.get())])
     )
     but_rotate.update()
     but_rotate.place(relx=130/root.winfo_width(),
                      rely=460/root.winfo_height(),
                      relwidth=but_rotate.winfo_reqwidth()/root.winfo_width(),
                      relheight=but_rotate.winfo_reqheight()/root.winfo_height())
-
-    label_center = Label(
-        root,
-        text="Центр масштабирования и поворота",
-        font=("Calibri", 15),
-        background="#899ad5",
-        foreground="black",
-        # width=30,
-        justify=LEFT
-    )
-    label_center.place(relx=10/root.winfo_width(),
-                       rely=565/root.winfo_height(),
-                       relheight=label_center.winfo_reqheight()/root.winfo_height(),
-                       relwidth=label_center.winfo_reqwidth()/root.winfo_width())
-
-    label_cx = Label(
-        root,
-        text="X",
-        font=("Calibri", 11),
-        background="#899ad5",
-        foreground="black",
-        # width=30,
-        justify=LEFT
-    )
-    label_cx.place(relx=30/root.winfo_width(),
-                   rely=590/root.winfo_height(),
-                   relheight=label_cx.winfo_reqheight()/root.winfo_height(),
-                   relwidth=label_cx.winfo_reqwidth()/root.winfo_width())
-
-    spinBox_center_x = Spinbox(root,
-                               width=10,
-                               from_=-1000,
-                               to=1000,
-                               textvariable=tkinter.StringVar(value=0))
-    spinBox_center_x.place(relx=60/root.winfo_width(),
-                           rely=590/root.winfo_height(),
-                           relwidth=spinBox_center_x.winfo_reqwidth()/root.winfo_width(),
-                           relheight=spinBox_center_x.winfo_reqheight()/root.winfo_height())
-
-    label_cy = Label(
-        root,
-        text="Y",
-        font=("Calibri", 11),
-        background="#899ad5",
-        foreground="black",
-        # width=30,
-        justify=LEFT
-    )
-    label_cy.place(relx=270/root.winfo_width(),
-                   rely=590/root.winfo_height(),
-                   relheight=label_cy.winfo_reqheight()/root.winfo_height(),
-                   relwidth=label_cy.winfo_reqwidth()/root.winfo_width())
-
-    spinBox_center_y = Spinbox(root,
-                               width=10,
-                               from_=-1000,
-                               to=1000,
-                               textvariable=tkinter.StringVar(value=0))
-    spinBox_center_y.place(relx=190/root.winfo_width(),
-                           rely=590/root.winfo_height(),
-                           relwidth=spinBox_center_y.winfo_reqwidth()/root.winfo_width(),
-                           relheight=spinBox_center_y.winfo_reqheight()/root.winfo_height())
 
     def mouse_clicked(event):
         # print point

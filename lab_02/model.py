@@ -1,5 +1,6 @@
 from copy import deepcopy
 from tkinter import messagebox
+from math import sin, cos
 
 parts_x = []
 parts_y = []
@@ -61,66 +62,100 @@ parts_y.append([145, 128, 160, 146, 172, 149, 146])
 parts_x.append([350, 318, 355, 309, 348, 306, 340, 297, 336, 292, 315])
 parts_y.append([165, 174, 191, 201, 216, 222, 242, 244, 254, 278, 282])
 
-
-original_parts_x = deepcopy(parts_x)
-original_parts_y = deepcopy(parts_y)
-
-prev_x = deepcopy(parts_x)
-prev_y = deepcopy(parts_y)
+parts = []
 
 
-def form_vertices_list():
-    parts = []
-    for i in range(len(parts_x)):
-        new_poly = []
-        for j in range(len(parts_x[i])):
-            new_vert = []
-            new_vert.append(parts_x[i][j])
-            new_vert.append(parts_y[i][j])
+for parts_id in range(len(parts_x)):
+    new_poly = []
+    for vert_id in range(len(parts_x[parts_id])):
+        new_vert = list()
+        new_vert.append(parts_x[parts_id][vert_id])
+        new_vert.append(parts_y[parts_id][vert_id])
 
-            new_poly.append(new_vert)
-        parts.append(new_poly)
-    return parts
+        new_poly.append(new_vert)
+    parts.append(new_poly)
 
 
-def draw_sides(canvas, vertices_x, vertices_y, parts):
+original_parts = deepcopy(parts)
+prev_parts = deepcopy(parts)
+
+
+def draw_sides(canvas, vertices_x):
     for i in range(len(parts)):
         for j in range(len(vertices_x[i]) - 1):
             canvas.create_line(parts[i][j], parts[i][j + 1])
-        # canvas.create_polygon(parts[i], outline='black', fill='')
 
 
-# (437, 385) (320, 375)
 def draw_model(canvas):
     canvas.delete("all")
-    parts = form_vertices_list()
-    draw_sides(canvas, parts_x, parts_y, parts)
+    draw_sides(canvas, parts_x)
 
 
 def ret_to_prev_action(canvas):
-    global parts_x, parts_y, prev_x, prev_y
+    global parts, prev_parts
 
-    if parts_x == prev_x and parts_y == prev_y:
+    if parts == prev_parts:
         messagebox.showerror(title='Только вперед', message='Назад пути нет .-.')
         return
 
-    parts_x = deepcopy(prev_x)
-    parts_y = deepcopy(prev_y)
+    parts = deepcopy(prev_parts)
 
     draw_model(canvas)
 
 
 def draw_original_model(canvas):
-    global parts_x, parts_y, prev_x, prev_y
+    global parts, prev_parts
 
-    if parts_x == original_parts_x and parts_y == original_parts_y:
+    if parts == original_parts:
         messagebox.showerror(title='Лучше уже не будет', message='Куда еще исходнее? 0_o')
         return
 
-    prev_x = deepcopy(parts_x)
-    prev_y = deepcopy(parts_y)
+    prev_parts = deepcopy(parts)
+    parts = deepcopy(original_parts)
 
-    parts_x = deepcopy(original_parts_x)
-    parts_y = deepcopy(original_parts_y)
+    draw_model(canvas)
+
+
+def deg_to_rad(deg):
+    return deg * 3.14159265359 / 180
+
+
+def point_rotate(point, angle, center):
+    angle_rad = deg_to_rad(angle)
+    point[0] = (point[0] - center[0]) * cos(angle_rad) - (point[1] - center[1]) * sin(angle_rad) + center[0]
+    point[1] = (point[0] - center[0]) * sin(angle_rad) + (point[1] - center[1]) * cos(angle_rad) + center[1]
+
+
+def point_scale(point, kx, ky, center):
+    print(point, kx, ky, center)
+    point[0] = center[0] + (point[0] - center[0]) * kx
+    point[1] = center[1] + (point[1] - center[1]) * ky
+
+
+def point_move(point, dx, dy):
+    point[0] += dx
+    point[1] += dy
+
+
+def move_model(canvas, dx, dy):
+    for i in range(len(parts)):
+        for j in range(len(parts[i])):
+            point_move(parts[i][j], dx, dy)
+
+    draw_model(canvas)
+
+
+def scale_model(canvas, kx, ky, center):
+    for i in range(len(parts)):
+        for j in range(len(parts[i])):
+            point_scale(parts[i][j], kx, ky, center)
+
+    draw_model(canvas)
+
+
+def rotate_model(canvas, angle, center):
+    for i in range(len(parts)):
+        for j in range(len(parts[i])):
+            point_rotate(parts[i][j], angle, center)
 
     draw_model(canvas)
