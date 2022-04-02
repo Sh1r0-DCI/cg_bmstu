@@ -131,21 +131,6 @@ def draw_everything(canvas, desired_polygon, printable_polygon):
     draw_points(canvas, desired_polygon, printable_polygon)
 
 
-def draw_all_stuff(canvas, desired_triangle, desired_vertex, dash_vertex, max_x, max_y, kx, ky, x_indent, y_indent):
-    ### triangle draw
-    canvas.create_polygon(desired_triangle[0][0] * kx + x_indent, canvas_height - desired_triangle[0][1]*ky - y_indent,
-                          desired_triangle[1][0] * kx + x_indent, canvas_height - desired_triangle[1][1]*ky - y_indent,
-                          desired_triangle[2][0] * kx + x_indent, canvas_height - desired_triangle[2][1]*ky - y_indent,
-                          fill='white', outline='black')
-
-    ############  draw points
-    for vertex in desired_triangle:
-        canvas.create_oval(vertex[0]*kx+x_indent - 1, canvas_height - vertex[1]*ky-y_indent - 1,
-            vertex[0]*kx+x_indent + 1, canvas_height - vertex[1]*ky-y_indent + 1, width=2)
-        canvas.create_text(vertex[0]*kx+x_indent - 15, canvas_height - vertex[1]*ky-y_indent - 15,
-            text = "({};{})".format(vertex[0], vertex[1]))
-
-
 def solve_task(canvas, listbox_set, n_vertices):
     coord_set = list(listbox_set.get(0, END))
     form_coord_matrix(coord_set)
