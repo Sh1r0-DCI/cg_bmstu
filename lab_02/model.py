@@ -127,7 +127,6 @@ def point_rotate(point, angle, center):
 
 
 def point_scale(point, kx, ky, center):
-    print(point, kx, ky, center)
     point[0] = center[0] + (point[0] - center[0]) * kx
     point[1] = center[1] + (point[1] - center[1]) * ky
 
@@ -138,6 +137,8 @@ def point_move(point, dx, dy):
 
 
 def move_model(canvas, dx, dy):
+    global prev_parts
+    prev_parts = deepcopy(parts)
     for i in range(len(parts)):
         for j in range(len(parts[i])):
             point_move(parts[i][j], dx, dy)
@@ -146,6 +147,8 @@ def move_model(canvas, dx, dy):
 
 
 def scale_model(canvas, kx, ky, center):
+    global prev_parts
+    prev_parts = deepcopy(parts)
     for i in range(len(parts)):
         for j in range(len(parts[i])):
             point_scale(parts[i][j], kx, ky, center)
@@ -154,6 +157,8 @@ def scale_model(canvas, kx, ky, center):
 
 
 def rotate_model(canvas, angle, center):
+    global prev_parts
+    prev_parts = deepcopy(parts)
     for i in range(len(parts)):
         for j in range(len(parts[i])):
             point_rotate(parts[i][j], angle, center)

@@ -6,6 +6,26 @@ from model import draw_model, draw_original_model, ret_to_prev_action
 from model import move_model, scale_model, rotate_model
 
 
+'''
+lab protection:
+
+1.1)move (20;20)
+1.2)scale(-1;-1) relative (20;20)
+1.3)move(-20;-20)
+1.4)scale (-1;1) relative to (0;0)
+1.5)scale (1;-1) relative to (0;0)
+1.6)? - nothing needed
+
+2.1)move (20;20)
+2.2)scale (-1;-1) relative to (20;20)
+2.3)move (-10;-10)
+2.4)scale(-1;1) relative to (0;0)
+2.5)move(-10;-10)
+2.6)scale(1;-1) relative to (0;0)
+2.7)? - move(20;0)
+'''
+
+
 prog_info = "Данная программа производит преобразования исходного изображения " \
        "(Перенос, масштабирование, поворот)"
 
