@@ -43,8 +43,8 @@ def gauss_area_algorithm(polygon, n_vertices):  # trapezoid formula
     pos_sum = 0
     neg_sum = 0
     for i in range(0, n_vertices - 1):
-        pos_sum += polygon[i][0] * polygon[i+1][1]
-        neg_sum += polygon[i+1][0] * polygon[i][1]
+        pos_sum += polygon[i][0] * polygon[i + 1][1]
+        neg_sum += polygon[i + 1][0] * polygon[i][1]
     return 0.5 * abs(pos_sum + polygon[n_vertices - 1][0] * polygon[0][1] -
                      neg_sum - polygon[0][0] * polygon[n_vertices - 1][1])
 
@@ -99,7 +99,7 @@ def find_odds_for_drawing(desired_triangle, max_x, max_y):
         y_indent = 0.5 * canvas_height
     elif k_x == 0 and k_y != 0:
         x_indent = 0.5 * canvas_width
-        y_indent = 0.05* canvas_height
+        y_indent = 0.05 * canvas_height
     elif k_x != 0 and k_y == 0:
         x_indent = 0.05 * canvas_width
         y_indent = 0.5 * canvas_height
@@ -114,8 +114,9 @@ def find_odds_for_drawing(desired_triangle, max_x, max_y):
 
 def make_printable_coords(printable_polygon, xmin, xmax, ymin, ymax, canvas):
     for vertex in printable_polygon:
-        vertex[0] = 100 + (vertex[0] - xmin)*((canvas.winfo_reqwidth() - 100) - 100) / (xmax - xmin)
-        vertex[1] = canvas.winfo_reqheight() - 100 - (vertex[1] - ymin)*((canvas.winfo_reqheight() -100) - 100) / (ymax - ymin)
+        vertex[0] = 100 + (vertex[0] - xmin) * ((canvas.winfo_reqwidth() - 100) - 100) / (xmax - xmin)
+        vertex[1] = canvas.winfo_reqheight() - 100 - \
+                    (vertex[1] - ymin) * ((canvas.winfo_reqheight() - 100) - 100) / (ymax - ymin)
 
 
 def draw_points(canvas, vertices, printable_vertices):
