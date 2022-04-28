@@ -2,6 +2,8 @@ import tkinter
 from tkinter import *
 from tkinter import messagebox
 
+from segment_draw import draw_beam, draw_segment
+
 
 prog_info = 'Реализация и исследование алгоритмов построения отрезков'
 
@@ -12,6 +14,10 @@ def about_author():
 
 def about_program():
     messagebox.showinfo(title='О программе', message=prog_info)
+
+
+def clear_screen(canvas):
+    canvas.delete('all')
 
 
 def ui(root):
@@ -114,7 +120,7 @@ def ui(root):
         justify=LEFT
     )
     label_line_color.place(relx=170/root.winfo_width(),
-                           rely=80/root.winfo_height(), # 185
+                           rely=80/root.winfo_height(),
                            relheight=label_line_color.winfo_reqheight()/root.winfo_height(),
                            relwidth=label_line_color.winfo_reqwidth()/root.winfo_width())
 
@@ -127,7 +133,7 @@ def ui(root):
         *colors_available
     )
     line_color_menu.place(relx=170/root.winfo_width(),
-                          rely=110/root.winfo_height(), # 215
+                          rely=110/root.winfo_height(),
                           relwidth=line_color_menu.winfo_reqwidth()/root.winfo_width(),
                           relheight=line_color_menu.winfo_reqheight()/root.winfo_height())
 
@@ -242,8 +248,12 @@ def ui(root):
         width=9,
         text="Отрисовать",
         bg="#899ad5",
-        # command=lambda: rotate_model(canvas, int(spinBox_rotate.get()),
-        #                             [int(spinBox_center_x.get()), int(spinBox_center_y.get())])
+        command=lambda: draw_segment(canvas,
+                                     spinBox_x1.get(),
+                                     spinBox_y1.get(),
+                                     spinBox_x2.get(),
+                                     spinBox_y2.get(),
+                                     variable_line_colors.get(), variable_algs.get())
     )
     but_draw_segment.update()
     but_draw_segment.place(relx=100/root.winfo_width(),
@@ -308,7 +318,7 @@ def ui(root):
     spinBox_angle.place(relx=130/root.winfo_width(),
                         rely=445/root.winfo_height(),
                         relwidth=spinBox_angle.winfo_reqwidth()/root.winfo_width(),
-                        relheight=spinBox_angle.winfo_reqheight()/root.winfo_height())
+                        relheight=spinBox_angle.winfo_reqheight()/root.winfo_height(),)
 
     but_draw_beam = Button(
         root,
@@ -316,14 +326,30 @@ def ui(root):
         width=9,
         text="Отрисовать",
         bg="#899ad5",
-        # command=lambda: rotate_model(canvas, int(spinBox_rotate.get()),
-        #                             [int(spinBox_center_x.get()), int(spinBox_center_y.get())])
+        command=lambda: draw_beam(canvas,
+                                  float(spinBox_seg_len.get()),
+                                  float(spinBox_angle.get()),
+                                  variable_line_colors.get(), variable_algs.get())
     )
     but_draw_beam.update()
     but_draw_beam.place(relx=100/root.winfo_width(),
                         rely=475/root.winfo_height(),
                         relwidth=but_draw_beam.winfo_reqwidth()/root.winfo_width(),
                         relheight=but_draw_beam.winfo_reqheight()/root.winfo_height())
+
+    but_cmp_time = Button(
+        root,
+        height=2,
+        width=15,
+        text="Очистить экран",
+        bg="#899ad5",
+        command=lambda: clear_screen(canvas)
+    )
+    but_cmp_time.update()
+    but_cmp_time.place(relx=20/root.winfo_width(),
+                       rely=575/root.winfo_height(),
+                       relwidth=but_cmp_time.winfo_reqwidth()/root.winfo_width(),
+                       relheight=but_cmp_time.winfo_reqheight()/root.winfo_height())
 
     but_cmp_time = Button(
         root,
@@ -336,7 +362,7 @@ def ui(root):
     )
     but_cmp_time.update()
     but_cmp_time.place(relx=20/root.winfo_width(),
-                       rely=575/root.winfo_height(),
+                       rely=625/root.winfo_height(),
                        relwidth=but_cmp_time.winfo_reqwidth()/root.winfo_width(),
                        relheight=but_cmp_time.winfo_reqheight()/root.winfo_height())
 
@@ -351,11 +377,9 @@ def ui(root):
     )
     but_cmp_step.update()
     but_cmp_step.place(relx=170/root.winfo_width(),
-                       rely=575/root.winfo_height(),
+                       rely=625/root.winfo_height(),
                        relwidth=but_cmp_step.winfo_reqwidth()/root.winfo_width(),
                        relheight=but_cmp_step.winfo_reqheight()/root.winfo_height())
-
-
 
 
 def main():
