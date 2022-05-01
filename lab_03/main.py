@@ -289,9 +289,9 @@ def ui(root):
 
     spinBox_seg_len = Spinbox(root,
                               width=10,
-                              from_=-1000,
+                              from_=1,
                               to=1000,
-                              textvariable=tkinter.StringVar(value=0))
+                              textvariable=tkinter.StringVar(value=350),)
     spinBox_seg_len.place(relx=130/root.winfo_width(),
                           rely=415/root.winfo_height(),
                           relwidth=spinBox_seg_len.winfo_reqwidth()/root.winfo_width(),
@@ -312,9 +312,9 @@ def ui(root):
 
     spinBox_angle = Spinbox(root,
                             width=10,
-                            from_=-1000,
-                            to=1000,
-                            textvariable=tkinter.StringVar(value=0))
+                            from_=1,
+                            to=359,
+                            textvariable=tkinter.StringVar(value=15))
     spinBox_angle.place(relx=130/root.winfo_width(),
                         rely=445/root.winfo_height(),
                         relwidth=spinBox_angle.winfo_reqwidth()/root.winfo_width(),

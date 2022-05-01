@@ -1,5 +1,6 @@
 from math import sin, cos, floor, fabs
 import matplotlib
+import colorutils
 
 
 def deg_to_rad(deg):
@@ -16,7 +17,7 @@ def sign(difference):
 
 
 def choose_color(color, intense):
-    return hex(color) + (intense*10000 + intense*100 + intense)
+    return colorutils.Color(color) + (intense, intense, intense)
 
 
 def draw_pixel(canvas, point, color):
@@ -30,6 +31,7 @@ def draw_line(canvas, points, color):
 
 def draw_aa_line(canvas, points):
     for point in points:
+        print(point[2])
         canvas.create_line(point[0], point[1], point[0] + 1, point[1], fill=point[2].hex)
 
 
@@ -40,7 +42,7 @@ def dda_method(x1, y1, x2, y2, step_count=False):
     dx = x2 - x1
     dy = y2 - y1
 
-    if (abs(dx) >= abs(dy)):
+    if abs(dx) >= abs(dy):
         l = abs(dx)
     else:
         l = abs(dy)
@@ -224,9 +226,9 @@ def bresenham_float_seg_draw(canvas, x1, y1, x2, y2, line_color):
     return
 
 
-def bresenham_aa(x1, y1, x2, y2, color, step_count = False):
+def bresenham_aa(x1, y1, x2, y2, color, step_count=False):
     if (x2 - x1 == 0) and (y2 - y1 == 0):
-        return [[x1, y1, matplotlib.colors.cnames[color]]]
+        return [[x1, y1, matplotlib.colors.to_rgb[color]]]
 
     x = x1
     y = y1
@@ -253,7 +255,7 @@ def bresenham_aa(x1, y1, x2, y2, color, step_count = False):
     m *= intens
     w = intens - m
 
-    dots = [[x, y, choose_color(matplotlib.colors.cnames[color], round(e))]]
+    dots = [[x, y, choose_color(matplotlib.colors.to_rgb(color), round(e))]]
 
     i = 1
 
@@ -275,7 +277,7 @@ def bresenham_aa(x1, y1, x2, y2, color, step_count = False):
 
             e -= w
 
-        dot = [x, y, choose_color(matplotlib.colors.cnames[color], round(e))]
+        dot = [x, y, choose_color(matplotlib.colors.to_rgb(color), round(e))]
 
         dots.append(dot)
 
@@ -300,7 +302,7 @@ def bresenham_aa_seg_draw(canvas, x1, y1, x2, y2, line_color):
 
 def wu(x1, y1, x2, y2, color, step_count=False):
     if (x2 - x1 == 0) and (y2 - y1 == 0):
-        return [[x1, y1, matplotlib.colors.cnames[color]]]
+        return [[x1, y1, matplotlib.colors.to_rgb(color)]]
 
 
     dx = x2 - x1
@@ -329,12 +331,12 @@ def wu(x1, y1, x2, y2, color, step_count=False):
             d1 = x1 - floor(x1)
             d2 = 1 - d1
 
-            dot1 = [int(x1) + 1, y_cur, choose_color(matplotlib.colors.cnames[color], round(fabs(d2) * intens))]
+            dot1 = [int(x1) + 1, y_cur, choose_color(matplotlib.colors.to_rgb(color), round(fabs(d2) * intens))]
 
-            dot2 = [int(x1), y_cur, choose_color(matplotlib.colors.cnames[color], round(fabs(d1) * intens))]
+            dot2 = [int(x1), y_cur, choose_color(matplotlib.colors.to_rgb(color), round(fabs(d1) * intens))]
 
             if step_count and y_cur < y2:
-                if (int(x1) != int(x1 + m)):
+                if int(x1) != int(x1 + m):
                     steps += 1
 
             dots.append(dot1)
@@ -358,12 +360,12 @@ def wu(x1, y1, x2, y2, color, step_count=False):
             d1 = y1 - floor(y1)
             d2 = 1 - d1
 
-            dot1 = [x_cur, int(y1) + 1, choose_color(matplotlib.colors.cnames[color], round(fabs(d2) * intens))]
+            dot1 = [x_cur, int(y1) + 1, choose_color(matplotlib.colors.to_rgb(color), round(fabs(d2) * intens))]
 
-            dot2 = [x_cur, int(y1), choose_color(matplotlib.colors.cnames[color], round(fabs(d1) * intens))]
+            dot2 = [x_cur, int(y1), choose_color(matplotlib.colors.to_rgb(color), round(fabs(d1) * intens))]
 
             if step_count and x_cur < x2:
-                if (int(y1) != int(y1 + m)):
+                if int(y1) != int(y1 + m):
                     steps += 1
 
             dots.append(dot1)
