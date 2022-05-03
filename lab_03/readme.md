@@ -1,0 +1,1 @@
+stolen from [amunra](https://github.com/amunra2/cg-bmstu-iu7)
