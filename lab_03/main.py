@@ -385,7 +385,6 @@ def ui(root):
 def main():
     root = Tk()
 
-    # window_settings(root)
     ui(root)
 
     root.mainloop()
