@@ -310,7 +310,8 @@ def ui(root):
                          width=10,
                          from_=1,
                          to=1000,
-                         textvariable=StringVar(value=30))
+                         textvariable=StringVar(value=30),
+                         state=DISABLED)
 
     label_re = Label(
             root,
@@ -407,7 +408,7 @@ def ui(root):
                          width=10,
                          from_=1,
                          to=1000,
-                         textvariable=StringVar(value=280))
+                         textvariable=StringVar(value=60))
 
     label_step_e = Label(
             root,
@@ -451,6 +452,54 @@ def ui(root):
             #                           variable_line_colors.get(), variable_algs.get())
         )
 
+    label_lock = Label(
+            root,
+            text="Выберите поле для блокировки",
+            font=("Calibri", 11),
+            background="#899ad5",
+            foreground="black",
+            justify=LEFT
+        )
+
+    var_lock_fields = IntVar()
+    var_lock_fields.set(0)
+    rs_lock_radb = Radiobutton(
+        root,
+        text='R_s',
+        variable=var_lock_fields,
+        value=0,
+        height=1,
+        width=3,
+        bg='#899ad5',
+    )
+    re_lock_radb = Radiobutton(
+        root,
+        text='R_e',
+        variable=var_lock_fields,
+        value=1,
+        height=1,
+        width=3,
+        bg='#899ad5',
+    )
+    step_lock_radb = Radiobutton(
+        root,
+        text='Step',
+        variable=var_lock_fields,
+        value=2,
+        height=1,
+        width=4,
+        bg='#899ad5',
+    )
+    n_lock_radb = Radiobutton(
+        root,
+        text='N',
+        variable=var_lock_fields,
+        value=3,
+        height=1,
+        width=1,
+        bg='#899ad5',
+    )
+
     def circle_interface():
         # ellipse widgets deletion
         label_ellipse_spectre.place_forget()
@@ -465,56 +514,105 @@ def ui(root):
         but_draw_ell_spectre.place_forget()
 
         label_circle_spectre.place(relx=20/root.winfo_width(),
-                                   rely=385/root.winfo_height(),
+                                   rely=365/root.winfo_height(),
                                    relwidth=label_circle_spectre.winfo_reqwidth()/root.winfo_width(),
                                    relheight=label_circle_spectre.winfo_reqheight()/root.winfo_height())
 
         label_rs.place(relx=20/root.winfo_width(),
-                       rely=415/root.winfo_height(),
+                       rely=395/root.winfo_height(),
                        relwidth=label_rs.winfo_reqwidth()/root.winfo_width(),
                        relheight=label_rs.winfo_reqheight()/root.winfo_height())
 
         spinBox_rs.place(relx=60/root.winfo_width(),
-                         rely=415/root.winfo_height(),
+                         rely=395/root.winfo_height(),
                          relwidth=spinBox_rs.winfo_reqwidth()/root.winfo_width(),
                          relheight=spinBox_rs.winfo_reqheight()/root.winfo_height())
 
         label_re.place(relx=170/root.winfo_width(),
-                       rely=415/root.winfo_height(),
+                       rely=395/root.winfo_height(),
                        relwidth=label_re.winfo_reqwidth()/root.winfo_width(),
                        relheight=label_re.winfo_reqheight()/root.winfo_height())
 
         spinBox_re.place(relx=210/root.winfo_width(),
-                         rely=415/root.winfo_height(),
+                         rely=395/root.winfo_height(),
                          relwidth=spinBox_re.winfo_reqwidth()/root.winfo_width(),
                          relheight=spinBox_re.winfo_reqheight()/root.winfo_height())
 
         label_step.place(relx=20/root.winfo_width(),
-                         rely=445/root.winfo_height(),
+                         rely=425/root.winfo_height(),
                          relwidth=label_step.winfo_reqwidth()/root.winfo_width(),
                          relheight=label_step.winfo_reqheight()/root.winfo_height())
 
         spinBox_step.place(relx=60/root.winfo_width(),
-                           rely=445/root.winfo_height(),
+                           rely=425/root.winfo_height(),
                            relwidth=spinBox_step.winfo_reqwidth()/root.winfo_width(),
                            relheight=spinBox_step.winfo_reqheight()/root.winfo_height(),)
 
         label_n.place(relx=170/root.winfo_width(),
-                      rely=445/root.winfo_height(),
+                      rely=425/root.winfo_height(),
                       relwidth=label_n.winfo_reqwidth()/root.winfo_width(),
                       relheight=label_n.winfo_reqheight()/root.winfo_height())
 
         spinBox_n.place(relx=210/root.winfo_width(),
-                        rely=445/root.winfo_height(),
+                        rely=425/root.winfo_height(),
                         relwidth=spinBox_n.winfo_reqwidth()/root.winfo_width(),
                         relheight=spinBox_n.winfo_reqheight()/root.winfo_height(),)
 
         but_draw_cir_spectre.place(relx=100/root.winfo_width(),
-                                   rely=475/root.winfo_height(),
+                                   rely=455/root.winfo_height(),
                                    relwidth=but_draw_cir_spectre.winfo_reqwidth()/root.winfo_width(),
                                    relheight=but_draw_cir_spectre.winfo_reqheight()/root.winfo_height())
 
-        # radio buttons for field lock needed
+        # radio button field lock
+
+        label_lock.place(relx=20/root.winfo_width(),
+                         rely=495/root.winfo_height(),
+                         relwidth=label_lock.winfo_reqwidth()/root.winfo_width(),
+                         relheight=label_lock.winfo_reqheight()/root.winfo_height())
+        rs_lock_radb.place(relx=20/root.winfo_width(),
+                           rely=515/root.winfo_height(),
+                           relwidth=rs_lock_radb.winfo_reqwidth()/root.winfo_width(),
+                           relheight=rs_lock_radb.winfo_reqheight()/root.winfo_height())
+        re_lock_radb.place(relx=70/root.winfo_width(),
+                           rely=515/root.winfo_height(),
+                           relwidth=re_lock_radb.winfo_reqwidth()/root.winfo_width(),
+                           relheight=re_lock_radb.winfo_reqheight()/root.winfo_height())
+        step_lock_radb.place(relx=120/root.winfo_width(),
+                             rely=515/root.winfo_height(),
+                             relwidth=step_lock_radb.winfo_reqwidth()/root.winfo_width(),
+                             relheight=step_lock_radb.winfo_reqheight()/root.winfo_height())
+        n_lock_radb.place(relx=180/root.winfo_width(),
+                          rely=515/root.winfo_height(),
+                          relwidth=n_lock_radb.winfo_reqwidth()/root.winfo_width(),
+                          relheight=n_lock_radb.winfo_reqheight()/root.winfo_height())
+
+        def field_lock():
+            print(var_lock_fields)
+
+            if var_lock_fields.get() == 0:
+                spinBox_rs.config(state=DISABLED)
+            else:
+                spinBox_rs.config(state=NORMAL)
+
+            if var_lock_fields.get() == 1:
+                spinBox_re.config(state=DISABLED)
+            else:
+                spinBox_re.config(state=NORMAL)
+
+            if var_lock_fields.get() == 2:
+                spinBox_step.config(state=DISABLED)
+            else:
+                spinBox_step.config(state=NORMAL)
+
+            if var_lock_fields.get() == 3:
+                spinBox_n.config(state=DISABLED)
+            else:
+                spinBox_n.config(state=NORMAL)
+
+        rs_lock_radb.config(command=lambda: field_lock())
+        re_lock_radb.config(command=lambda: field_lock())
+        step_lock_radb.config(command=lambda: field_lock())
+        n_lock_radb.config(command=lambda: field_lock())
 
     def ellipse_interface():
         # circle widgets deletion
@@ -528,54 +626,59 @@ def ui(root):
         label_n.place_forget()
         spinBox_n.place_forget()
         but_draw_cir_spectre.place_forget()
+        label_lock.place_forget()
+        rs_lock_radb.place_forget()
+        re_lock_radb.place_forget()
+        step_lock_radb.place_forget()
+        n_lock_radb.place_forget()
 
         label_ellipse_spectre.place(relx=20/root.winfo_width(),
-                                    rely=385/root.winfo_height(),
+                                    rely=365/root.winfo_height(),
                                     relwidth=label_ellipse_spectre.winfo_reqwidth()/root.winfo_width(),
                                     relheight=label_ellipse_spectre.winfo_reqheight()/root.winfo_height())
 
         label_ra.place(relx=20/root.winfo_width(),
-                       rely=415/root.winfo_height(),
+                       rely=395/root.winfo_height(),
                        relwidth=label_ra.winfo_reqwidth()/root.winfo_width(),
                        relheight=label_ra.winfo_reqheight()/root.winfo_height())
 
         spinBox_ra.place(relx=60/root.winfo_width(),
-                         rely=415/root.winfo_height(),
+                         rely=395/root.winfo_height(),
                          relwidth=spinBox_ra.winfo_reqwidth()/root.winfo_width(),
                          relheight=spinBox_ra.winfo_reqheight()/root.winfo_height())
 
         label_rb.place(relx=170/root.winfo_width(),
-                       rely=415/root.winfo_height(),
+                       rely=395/root.winfo_height(),
                        relwidth=label_rb.winfo_reqwidth()/root.winfo_width(),
                        relheight=label_rb.winfo_reqheight()/root.winfo_height())
 
         spinBox_rb.place(relx=210/root.winfo_width(),
-                         rely=415/root.winfo_height(),
+                         rely=395/root.winfo_height(),
                          relwidth=spinBox_rb.winfo_reqwidth()/root.winfo_width(),
                          relheight=spinBox_rb.winfo_reqheight()/root.winfo_height())
 
         label_step_e.place(relx=20/root.winfo_width(),
-                           rely=445/root.winfo_height(),
+                           rely=425/root.winfo_height(),
                            relwidth=label_step_e.winfo_reqwidth()/root.winfo_width(),
                            relheight=label_step_e.winfo_reqheight()/root.winfo_height())
 
         spinBox_step_e.place(relx=60/root.winfo_width(),
-                             rely=445/root.winfo_height(),
+                             rely=425/root.winfo_height(),
                              relwidth=spinBox_step_e.winfo_reqwidth()/root.winfo_width(),
                              relheight=spinBox_step_e.winfo_reqheight()/root.winfo_height(),)
 
         label_n_e.place(relx=170/root.winfo_width(),
-                        rely=445/root.winfo_height(),
+                        rely=425/root.winfo_height(),
                         relwidth=label_n_e.winfo_reqwidth()/root.winfo_width(),
                         relheight=label_n_e.winfo_reqheight()/root.winfo_height())
 
         spinBox_n_e.place(relx=210/root.winfo_width(),
-                          rely=445/root.winfo_height(),
+                          rely=425/root.winfo_height(),
                           relwidth=spinBox_n_e.winfo_reqwidth()/root.winfo_width(),
                           relheight=spinBox_n_e.winfo_reqheight()/root.winfo_height(),)
 
         but_draw_ell_spectre.place(relx=100/root.winfo_width(),
-                                   rely=475/root.winfo_height(),
+                                   rely=455/root.winfo_height(),
                                    relwidth=but_draw_ell_spectre.winfo_reqwidth()/root.winfo_width(),
                                    relheight=but_draw_ell_spectre.winfo_reqheight()/root.winfo_height())
 
@@ -612,7 +715,9 @@ def ui(root):
                               relwidth=ellipse_radiobutton.winfo_reqwidth()/root.winfo_width(),
                               relheight=ellipse_radiobutton.winfo_reqheight()/root.winfo_height())
 
-    but_cmp_time = Button(
+    # spinboxes here
+
+    but_clear_screen = Button(
         root,
         height=2,
         width=15,
@@ -620,11 +725,11 @@ def ui(root):
         bg="#899ad5",
         command=lambda: clear_screen(canvas)
     )
-    but_cmp_time.update()
-    but_cmp_time.place(relx=20/root.winfo_width(),
-                       rely=575/root.winfo_height(),
-                       relwidth=but_cmp_time.winfo_reqwidth()/root.winfo_width(),
-                       relheight=but_cmp_time.winfo_reqheight()/root.winfo_height())
+    but_clear_screen.update()
+    but_clear_screen.place(relx=20/root.winfo_width(),
+                           rely=575/root.winfo_height(),
+                           relwidth=but_clear_screen.winfo_reqwidth()/root.winfo_width(),
+                           relheight=but_clear_screen.winfo_reqheight()/root.winfo_height())
 
     but_cmp_time = Button(
         root,
@@ -640,18 +745,3 @@ def ui(root):
                        rely=625/root.winfo_height(),
                        relwidth=but_cmp_time.winfo_reqwidth()/root.winfo_width(),
                        relheight=but_cmp_time.winfo_reqheight()/root.winfo_height())
-
-    but_cmp_step = Button(
-        root,
-        height=2,
-        width=20,
-        text="Сравнить ступенчатость",
-        bg="#899ad5",
-        # command=lambda: rotate_model(canvas, int(spinBox_rotate.get()),
-        #                             [int(spinBox_center_x.get()), int(spinBox_center_y.get())])
-    )
-    but_cmp_step.update()
-    but_cmp_step.place(relx=170/root.winfo_width(),
-                       rely=625/root.winfo_height(),
-                       relwidth=but_cmp_step.winfo_reqwidth()/root.winfo_width(),
-                       relheight=but_cmp_step.winfo_reqheight()/root.winfo_height())
